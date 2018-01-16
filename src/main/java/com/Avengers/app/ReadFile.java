@@ -9,10 +9,9 @@ import java.util.List;
 
 public class ReadFile {
 
-    private static final String FILENAME = "C:\\Users\\uzer1\\Desktop\\small_data_sample.txt";
 
-    public static ArrayList<ArrayList<String>> getAttributeLogMessage(String msg){
-        ArrayList<ArrayList<String>> line= new ArrayList<>();
+    public static ArrayList<ArrayList<String>> getAttributeLogMessage(String msg) {
+        ArrayList<ArrayList<String>> line = new ArrayList<>();
         String[] msgAfterSplit = msg.split("message_type");
         String msgBody = msgAfterSplit[0].split("message:")[1];
         String afterMsgType = "message_type" + msgAfterSplit[1];
@@ -21,11 +20,9 @@ public class ReadFile {
             ArrayList<String> pair = new ArrayList<>();
             if (splitBySpace.contains(":") && !splitBySpace.equals(":")) {
                 String[] splitByTowDots = splitBySpace.split(":");
-                if (splitByTowDots[0].equals("timestamp"))
-                {
+                if (splitByTowDots[0].equals("timestamp")) {
                     pair.add("msgtimestamp");
-                }
-                else {
+                } else {
                     pair.add(splitByTowDots[0]);
                 }
                 pair.add(splitByTowDots[1]);
@@ -43,19 +40,15 @@ public class ReadFile {
 
     }
 
-    public static ArrayList<ArrayList<ArrayList<String>>> getAttributesSet() {
-        BufferedReader br = null;
-        FileReader fr = null;
+    public static ArrayList<ArrayList<ArrayList<String>>> getAttributesSet(BufferedReader br) {
         ArrayList<ArrayList<ArrayList<String>>> allInfo = new ArrayList<>();
         List<Integer> values = new ArrayList<Integer>();
+        int pos = 0;
         try {
-            //br = new BufferedReader(new FileReader(FILENAME));
-            fr = new FileReader(FILENAME);
-            br = new BufferedReader(fr);
 
             String sCurrentLine;
             int lineNumber = 0;
-            while ((sCurrentLine = br.readLine()) != null) {
+            while (pos < 500 && (sCurrentLine = br.readLine()) != null) {
 //                boolean isOpen = false;
                 if (lineNumber == 0 || lineNumber == 1) {
                     lineNumber++;
@@ -64,28 +57,27 @@ public class ReadFile {
                 ArrayList<ArrayList<String>> line = new ArrayList<>();
                 String[] splitBySpaces = sCurrentLine.split("\\s");
                 for (String splitBySpace : splitBySpaces) {
-                        ArrayList<String> pair = new ArrayList<>();
-                        if (splitBySpace.contains(":") && !splitBySpace.equals(":")) {
-                            String[] splitByTowDots = splitBySpace.split(":");
-                            if (splitByTowDots[0].equals("logMessage")) // this is the last attribute
-                            {
-                                String splitByLogMessage = sCurrentLine.split("logMessage:")[1];
-                                line.addAll(getAttributeLogMessage(splitByLogMessage));
-                                break;
-                            }
-                            else
-                            {
-                                pair.add(splitByTowDots[0]);
-                                pair.add(splitByTowDots[1]);
-                            }
-                         //   int att_inx = attributes.indexOf(splitByTowDots[0]);
-                            line.add(pair);
-                         //   values.set(att_inx, values.get(attributes.indexOf(splitByTowDots[0])) + 1);
-//                        values.indexOf(values.get(attributes.indexOf(splitByTowDots[0])))
+                    ArrayList<String> pair = new ArrayList<>();
+                    if (splitBySpace.contains(":") && !splitBySpace.equals(":")) {
+                        String[] splitByTowDots = splitBySpace.split(":");
+                        if (splitByTowDots[0].equals("logMessage")) // this is the last attribute
+                        {
+                            String splitByLogMessage = sCurrentLine.split("logMessage:")[1];
+                            line.addAll(getAttributeLogMessage(splitByLogMessage));
+                            break;
+                        } else {
+                            pair.add(splitByTowDots[0]);
+                            pair.add(splitByTowDots[1]);
                         }
+                        //   int att_inx = attributes.indexOf(splitByTowDots[0]);
+                        line.add(pair);
+                        //   values.set(att_inx, values.get(attributes.indexOf(splitByTowDots[0])) + 1);
+//                        values.indexOf(values.get(attributes.indexOf(splitByTowDots[0])))
+                    }
                 }
                 lineNumber++;
                 allInfo.add(line);
+                pos++;
             }
 //            for(String stt : attributes)
 //            {
@@ -95,18 +87,10 @@ public class ReadFile {
 
             e.printStackTrace();
 
-        } finally {
-            try {
-                if (br != null)
-                    br.close();
-                if (fr != null)
-                    fr.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
         }
         return allInfo;
     }
+}
 
 //    public static List getValues() {
 //        BufferedReader br = null;
@@ -158,13 +142,3 @@ public class ReadFile {
 //        return attributes;
 //    }
 
-    public static void main(String[] args) {
-        ArrayList<ArrayList<ArrayList<String>>> lines = getAttributesSet();
-        for (ArrayList<ArrayList<String>> line : lines)
-        {
-            for(ArrayList<String> pair: line) {
-                System.out.println(pair.get(0) + " " + pair.get(1));
-            }
-        }
-    }
-}
