@@ -1,5 +1,6 @@
 package com.Avengers.app;
 
+import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -16,7 +17,7 @@ import java.util.List;
 public class Application2301 {
 
     private static final Logger log = LoggerFactory.getLogger(Application2301.class);
-    private static final String FILENAME = "C:\\Users\\Snir Alfandari\\Desktop\\לימודים\\שנה ד\\Final Project\\GE-Huji-Project\\students_dataset_uaa_attack.log";
+    private static final String FILENAME = "students_dataset_uaa_attack.log";
     private static Connection conn = null;
 //    private static String tableName = "features";
     private static String tableName = "features2";
@@ -124,6 +125,55 @@ public class Application2301 {
         }
     }
 
+    public static ArrayList<ArrayList<Pair>> getData()
+    {
+        Statement st = null;
+        ResultSet rs ;
+        String q1,q2;
+        ArrayList<Pair> line = new ArrayList<>();
+        ArrayList<ArrayList<Pair>> lines = new ArrayList<>();
+        String qs = "SELECT * FROM " + tableName;
+        ArrayList<String> features_names = new ArrayList<>();
+
+        try{
+            Class.forName("org.postgresql.Driver");
+            System.out.println("connect");
+        } catch (ClassNotFoundException cnfe){
+            System.out.println("Could not find the JDBC driver!");
+            System.exit(1);
+        }
+        try {
+            //database location, database user, database password
+            conn = DriverManager.getConnection
+                    ("jdbc:postgresql://localhost:5432/testdb","postgres", "1234");
+            st = conn.createStatement();
+            rs = st.executeQuery(qs);
+            ResultSetMetaData meta = rs.getMetaData();
+            for (int i=1; i <= meta.getColumnCount(); i++)
+            {
+                features_names.add(meta.getColumnName(i));
+            }
+            Pair p;
+            while (rs.next()) {
+                line.clear();
+                for (int i=1; i<= features_names.size(); i++)
+                {
+                    q1 = features_names.get(i-1);
+                    q2 = rs.getString(i);
+                    p = new Pair(q1, q2);
+                    line.add(p);
+                }
+                lines.add(line);
+
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Could not connect");
+            System.exit(1);
+        }
+        return lines;
+
+    }
+
 
     public static void main( String[] args )
     {
@@ -141,6 +191,7 @@ public class Application2301 {
             insertIntoTable(attributes);
             attributes = ReadFile.getAttributesSet(br);
         }
+
 
     }
 
