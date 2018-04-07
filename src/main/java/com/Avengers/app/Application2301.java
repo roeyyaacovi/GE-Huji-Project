@@ -2,22 +2,22 @@ package com.Avengers.app;
 
 import com.Avengers.app.Security.Parser;
 import javafx.util.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+//import org.springframework.boot.CommandLineRunner;
+//import org.springframework.boot.SpringApplication;
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
+//import org.springframework.context.annotation.Bean;
 
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootApplication
+//@SpringBootApplication
 public class Application2301 {
 
-    private static final Logger log = LoggerFactory.getLogger(Application2301.class);
+  //  private static final Logger log = LoggerFactory.getLogger(Application2301.class);
     private static final String FILENAME = "students_dataset_uaa_attack.log";
     private static Connection conn = null;
 //    private static String tableName = "features";
@@ -180,6 +180,8 @@ public class Application2301 {
     {
         Parser parser = new Parser();
 
+        parser.parseLine(null);
+
 
 
    //     SpringApplication.run(Application.class, args);
@@ -198,15 +200,6 @@ public class Application2301 {
         }
 
 
-    }
-
-    @Bean
-    public CommandLineRunner demo(CustomerRepository repository) {
-        return (args) -> {
-            // save a couple of customers
-            repository.save(new Customer("Magdolena", "Ippen"));
-
-        };
     }
 }
 
