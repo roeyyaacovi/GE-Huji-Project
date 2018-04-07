@@ -1,5 +1,6 @@
 package com.Avengers.app;
 
+import com.Avengers.app.Security.Parser;
 import javafx.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,6 +178,10 @@ public class Application2301 {
 
     public static void main( String[] args )
     {
+        Parser parser = new Parser();
+
+
+
    //     SpringApplication.run(Application.class, args);
         BufferedReader br = null;
         try {
