@@ -14,23 +14,24 @@ public class Parser {
         String originValue = logLine.get("origin");
         String domainName;
         String startTime;
+        String responseTime;
 
         if(originValue == null){
             return null;
         }
 
-        /* Only interested in logs from the GoRouter. */
-        if(!originValue.equals("gorouter")){
-            return null;
-        }
-
-        String logMessage = logLine.get("logMessage");
-
-        if(logMessage == null){
-            return null;
-        }
-
-        domainName = getDomainName(logMessage);
+//        /* Only interested in logs from the GoRouter. */
+//        if(!originValue.equals("gorouter")){
+//            return null;
+//        }
+//
+//        String logMessage = logLine.get("logMessage");
+//
+//        if(logMessage == null){
+//            return null;
+//        }
+//
+//        domainName = getDomainName(logMessage);
 
         domainName = getDomainName(example);
 
@@ -44,7 +45,11 @@ public class Parser {
             return null;
         }
 
+        responseTime = getResponseTime(example);
 
+        if(responseTime == null){
+            return null;
+        }
 
         return null;
     }
@@ -61,8 +66,20 @@ public class Parser {
         return matcher.group(1);
     }
 
+    private String getResponseTime(String logMessage){
+        Pattern pattern = Pattern.compile("message:\".* response_time: \\[(.*)\\] .*");
+
+        Matcher matcher = pattern.matcher(logMessage);
+
+        if(!matcher.find()){
+            return null;
+        }
+
+        return matcher.group(1);
+    }
+
     private String getStartTime(String logMessage){
-        Pattern pattern = Pattern.compile("message:\".* - \\[(.*)\\] .*");
+        Pattern pattern = Pattern.compile("message:\".*response_time:(.*) .*");
 
         Matcher matcher = pattern.matcher(logMessage);
 
