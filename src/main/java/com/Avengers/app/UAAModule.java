@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class UAAModule {
     private Map<String, ArrayList<my_date>> instance_map;
 
@@ -25,6 +26,9 @@ public class UAAModule {
         private int hour;
         private int minute;
         private double second;
+        private int BIGGER = -1;
+        private int EQUAL = 0;
+        private int SMALLER = 1;
 
         public my_date(int y, int m, int d, int h, int mi, double s)
         {
@@ -34,6 +38,13 @@ public class UAAModule {
             hour = h;
             minute = mi;
             second = s;
+        }
+
+        public int compare(my_date other)
+        {
+            if (other.year < this.year)
+                return SMALLER;
+            
         }
     }
 
