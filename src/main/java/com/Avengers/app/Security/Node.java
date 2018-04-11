@@ -26,6 +26,10 @@ public class Node {
         return domainName;
     }
 
+    public ArrayList<Node> getParentNodes(){
+        return parentNodes;
+    }
+
     public void addParentNode(Node parentNode){
         if(null == parentNode){
             return;
@@ -37,7 +41,7 @@ public class Node {
     public boolean newRequest(TimeSlot newTimeSlot){
         /* Check if any of its parents have valid time slots */
         for(Node parentNode : parentNodes){
-            if(checkIfTimeSlotValid(newTimeSlot)){
+            if(parentNode.checkIfTimeSlotValid(newTimeSlot)){
                 activeTimeSlots.add(newTimeSlot);
                 return true;
             }
@@ -47,9 +51,9 @@ public class Node {
     }
 
     public boolean newRequest(int startTime, int responseTime){
-        TimeSlot newTimeSlot = new TimeSlot(startTime, responseTime);
+        //TimeSlot newTimeSlot = new TimeSlot(startTime, responseTime);
 
-        return newRequest(newTimeSlot);
+        return false;//newRequest(newTimeSlot);
     }
 
     public boolean checkIfTimeSlotValid(TimeSlot childTimeSlot){

@@ -1,6 +1,7 @@
 package com.Avengers.app;
 
 import com.Avengers.app.Security.Parser;
+import com.Avengers.app.Security.TimeSlot;
 import javafx.util.Pair;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
@@ -178,11 +179,13 @@ public class Application2301 {
 
     public static void main( String[] args )
     {
-        Parser parser = new Parser();
+//        Parser parser = new Parser();
+//
+//        parser.parseLine(null);
 
-        parser.parseLine(null);
+        TimeSlot t = new TimeSlot("d",0);
 
-
+        t.convertStringToDate();
 
    //     SpringApplication.run(Application.class, args);
         BufferedReader br = null;
