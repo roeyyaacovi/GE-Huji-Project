@@ -1,12 +1,11 @@
 package com.Avengers.app;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Framework_Module  {
@@ -18,6 +17,7 @@ public class Framework_Module  {
 
     Framework_Module(ArrayList<String> modules_names, String input_path)
     {
+        module_file_pos = new HashMap<>();
         for (String module_name: modules_names)
         {
             module_file_pos.put(module_name, INITIAL_VALUE);
@@ -25,49 +25,42 @@ public class Framework_Module  {
         this.input_path = input_path;
     }
 
-    public int getData(String module_name, ArrayList<Map<String, String>> buff, int num_of_lines)
+    public synchronized int getData(String module_name, ArrayList<Map<String, String>> buff, int num_of_lines)
     {
-        System.out.println("get data");
+        System.out.println("get data " + module_name);
         BufferedReader reader = null;
         long pos = module_file_pos.get(module_name);
         long new_pos = pos;
         int lines_read = 0;
         try {
             reader = new BufferedReader(new FileReader(input_path));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
             if (reader != null && pos != END_OF_FILE) {
-                if (pos == 0)
+                for (int k=0 ; k< pos + SKIP_LINES; k++)
                 {
-                    for (int j=0; j< SKIP_LINES; j++)
-                    {
-                        reader.readLine();
-                    }
-                }
-                else {
-                    reader.skip(pos);
+                    reader.readLine();
                 }
                 String line;
-                Map<String, String> parsed_line;
+                Map<String, String> parsed_line = new HashMap<>();
                 for (int i=0 ; i<num_of_lines; i++) {
                     if ((line = reader.readLine()) != null) {
                         lines_read ++;
-                        new_pos += line.getBytes().length;
-                        parsed_line = Read_File.getAttributesSet(line);
+                        parsed_line = Parser.getAttributesSet(line);
                         buff.add(parsed_line);
+                        line = reader.readLine();
+                        lines_read++;
                     }
                 }
             }
+            reader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new_pos += lines_read;
         module_file_pos.put(module_name, new_pos);
         return lines_read;
     }
 
-    public void alert(String module_name)
+    public synchronized void alert(String module_name)
     {
         System.out.println(module_name + " alert");
     }

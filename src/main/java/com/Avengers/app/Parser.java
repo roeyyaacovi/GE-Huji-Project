@@ -5,14 +5,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Read_File {
+public class Parser {
 
 
     public static Map<String, String> getAttributeLogMessage(String msg) {
-        Map<String, String> line = null;
+        Map<String, String> line = new HashMap<>();
         String[] msgAfterSplit = msg.split("message_type");
         String msgBody = msgAfterSplit[0].split("message:")[1];
         String afterMsgType = "message_type" + msgAfterSplit[1];
@@ -33,7 +34,7 @@ public class Read_File {
     }
 
     public static Map<String, String> getAttributesSet(String sCurrentLine) {
-        Map<String, String> allInfo = null;
+        Map<String, String> allInfo = new HashMap<>();
         String[] splitBySpaces = sCurrentLine.split("\\s");
         for (String splitBySpace : splitBySpaces) {
             if (splitBySpace.contains(":") && !splitBySpace.equals(":")) {
