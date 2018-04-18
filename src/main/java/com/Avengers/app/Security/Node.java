@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Node {
     private ArrayList<Node> childrenNodes;
     private ArrayList<Node> parentNodes;
-    private ArrayList<TimeSlot> activeTimeSlots;
+    private ArrayList<TimeSlot> activeTimeSlots = new ArrayList<>();
     private String domainName;
 
     public Node(String domainName){
@@ -38,8 +38,14 @@ public class Node {
         parentNodes.add(parentNode);
     }
 
-    public boolean newRequest(TimeSlot newTimeSlot){
-        /* Check if any of its parents have valid time slots */
+    public boolean isNewRequestValid(TimeSlot newTimeSlot){
+        /* If no parents, then the request is definitely valid */
+        if(parentNodes.isEmpty()){
+            activeTimeSlots.add(newTimeSlot);
+            return true;
+        }
+
+        /* If any of the parents have a valid time slot, return true */
         for(Node parentNode : parentNodes){
             if(parentNode.checkIfTimeSlotValid(newTimeSlot)){
                 activeTimeSlots.add(newTimeSlot);
@@ -50,10 +56,10 @@ public class Node {
         return false;
     }
 
-    public boolean newRequest(int startTime, int responseTime){
-        //TimeSlot newTimeSlot = new TimeSlot(startTime, responseTime);
+    public boolean isNewRequestValid(String startTime, String responseTime){
+        TimeSlot newTimeSlot = new TimeSlot(startTime, responseTime);
 
-        return false;//newRequest(newTimeSlot);
+        return isNewRequestValid(newTimeSlot);
     }
 
     public boolean checkIfTimeSlotValid(TimeSlot childTimeSlot){

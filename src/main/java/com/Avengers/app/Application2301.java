@@ -1,6 +1,7 @@
 package com.Avengers.app;
 
 import com.Avengers.app.Security.Parser;
+import com.Avengers.app.Security.SecurityModule;
 import com.Avengers.app.Security.TimeSlot;
 import javafx.util.Pair;
 //import org.slf4j.Logger;
@@ -183,9 +184,16 @@ public class Application2301 {
 //
 //        parser.parseLine(null);
 
-        TimeSlot t = new TimeSlot("d",0);
+//        TimeSlot t = new TimeSlot("d",0);
+//
+//        t.convertStringToDate();
 
-        t.convertStringToDate();
+
+        SecurityModule securityModule = new SecurityModule();
+
+        securityModule.init();
+
+        securityModule.start();
 
    //     SpringApplication.run(Application.class, args);
         BufferedReader br = null;

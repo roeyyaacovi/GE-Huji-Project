@@ -11,7 +11,6 @@ public class TimeSlot {
     private long longStartTime;
     private long nanoSecondsResponseTime;
 
-    private static final String example = "2017-12-10T11:34:18.316+0000";
 
     public TimeSlot(String startTime, String responseTime){
         this.strStartTime = startTime;
@@ -33,7 +32,7 @@ public class TimeSlot {
         Calendar calendar = Calendar.getInstance();
         Pattern datePattern = Pattern.compile("([0-9]*?)-([0-9]*?)-([0-9]*)T(.*)");
 
-        Matcher matcher = datePattern.matcher(example);
+        Matcher matcher = datePattern.matcher(strStartTime);
 
         if(!matcher.find()){
             return 0;
@@ -71,6 +70,12 @@ public class TimeSlot {
         return longStartTime;
     }
 
+
+    /**
+     * Checks if the given time slot (other) is inside the current time slot (this)
+     * @param other The time slot to check
+     * @return True if inside false if not
+     */
     public boolean isInsideTimeSlot(TimeSlot other){
         double differenceNanoSeconds = 0;
 
@@ -80,11 +85,8 @@ public class TimeSlot {
 
         differenceNanoSeconds = (other.getStartTimeDate() - this.getStartTimeDate())*java.lang.Math.pow(10,6);
 
-        if(getNanoSecondsResponseTime() > (differenceNanoSeconds + other.getNanoSecondsResponseTime())){
-            return true;
-        }
+        return getNanoSecondsResponseTime() > (differenceNanoSeconds + other.getNanoSecondsResponseTime());
 
-        return false;
     }
 
 }
