@@ -32,6 +32,7 @@ public class Framework_Module  {
         long pos = module_file_pos.get(module_name);
         long new_pos = pos;
         int lines_read = 0;
+        int lines_to_return = 0;
         try {
             reader = new BufferedReader(new FileReader(input_path));
             if (reader != null && pos != END_OF_FILE) {
@@ -44,6 +45,7 @@ public class Framework_Module  {
                 for (int i=0 ; i<num_of_lines; i++) {
                     if ((line = reader.readLine()) != null) {
                         lines_read ++;
+                        lines_to_return++;
                         parsed_line = Parser.getAttributesSet(line);
                         buff.add(parsed_line);
                         line = reader.readLine();
@@ -57,7 +59,7 @@ public class Framework_Module  {
         }
         new_pos += lines_read;
         module_file_pos.put(module_name, new_pos);
-        return lines_read;
+        return lines_to_return;
     }
 
     public synchronized void alert(String module_name)
