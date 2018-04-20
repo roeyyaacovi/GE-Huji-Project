@@ -3,7 +3,7 @@ package com.Avengers.app;
 import java.util.ArrayList;
 import java.util.Map;
 
-abstract class Interface_Module extends Thread {
+abstract public class Interface_Module extends Thread {
 
     protected Thread t;
     protected String moduleName;
