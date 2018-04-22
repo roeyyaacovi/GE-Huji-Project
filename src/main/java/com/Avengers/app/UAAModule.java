@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 
 public class UAAModule {
-    private Map<String, ArrayList<my_date>> instance_map;
+    private Map<String, ArrayList<my_date>> tenant;
     private int LOGS_PER_MINUTE = 5;
     private int NUM_OF_MINUTES_TO_CHECK = 0;
 
@@ -17,7 +17,7 @@ public class UAAModule {
 
     public UAAModule()
     {
-        instance_map = new HashMap<>();
+        tenant = new HashMap<>();
     }
 
     public class my_date {
@@ -78,7 +78,7 @@ public class UAAModule {
     }
 
     private boolean check_if_suspect(String line){
-        String[] phrases = {"authentication failed"};
+        String[] phrases = {"88a65cea-5d1a-4c9d-86e0-c3842093c4af","authentication failed"};
         for (String phrase: phrases){
             if (line.toLowerCase().contains(phrase.toLowerCase())){
                 return true;
@@ -91,18 +91,18 @@ public class UAAModule {
     {
         String inst = "";
         my_date d = new my_date();
-        String pattern = "\"time\":\"((\\d+)-(\\d+)-(\\d+))T((\\d+):(\\d+):(.*))\\+.*inst\":\"(.*)\",\"tid.*";
+        String pattern = "\"time\":\"((\\d+)-(\\d+)-(\\d+))T((\\d+):(\\d+):(.*))\\+.*tnt\":\"(.*)\",\"corr.*";
         Pattern r = Pattern.compile(pattern);
         line = "{\"time\":\"2017-12-10T11:34:18.388+0000\",\"tnt\":\"495bf861-b1f8-4de7-a8d6-b8a96f392337\",\"corr\":\"b0ac39f8ecb10b0f\",\"appn\":\"cf3-staging-uaa\",\"dpmt\":\"88a65cea-5d1a-4c9d-86e0-c3842093c4af\",\"inst\":\"25d195dd-6120-4b89-579a-a7a9921c50cf\",\"tid\":\"http-nio-8080-exec-5\",\"mod\":\"JwtBearerAssertionAuthenticationFilter.java\",\"lvl\":\"DEBUG\",\"msg\":\"jwt-bearer authentication failed. Unknown client.\"}";
         Matcher m = r.matcher(line);
         if (m.find( )) {
             inst = m.group(9);
-            if (!instance_map.containsKey(inst)){
-                instance_map.put(inst, new ArrayList<>());
+            if (!tenant.containsKey(inst)){
+                tenant.put(inst, new ArrayList<>());
             }
             d = new my_date(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)),
                     Integer.parseInt(m.group(6)), Integer.parseInt(m.group(7)), Double.parseDouble(m.group(8)));
-            instance_map.get(inst).add(d);
+            tenant.get(inst).add(d);
         }
         return new Pair<>(inst, d);
     }
@@ -110,7 +110,7 @@ public class UAAModule {
     private boolean was_an_attack(Pair<String, my_date> p)
     {
         int count = 0;
-        ArrayList<my_date> logs = instance_map.get(p.getKey());
+        ArrayList<my_date> logs = tenant.get(p.getKey());
         ArrayList<my_date> to_delete = new ArrayList<>();
         my_date curr_date = p.getValue();
         for (my_date log : logs){
