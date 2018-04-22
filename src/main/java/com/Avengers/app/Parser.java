@@ -24,7 +24,7 @@ public class Parser {
                 if (splitByTowDots[0].equals("timestamp")) {
                     line.put("msgtimestamp", splitByTowDots[1]);
                 } else {
-                    line.put(splitByTowDots[0], splitByTowDots[1]);
+                    line.put(splitByTowDots[0], splitByTowDots[1].replaceAll("\"", ""));
                 }
             }
         }
@@ -45,7 +45,7 @@ public class Parser {
                     allInfo.putAll(getAttributeLogMessage(splitByLogMessage));
                     break;
                 } else {
-                    allInfo.put(splitByTowDots[0], splitByTowDots[1]);
+                    allInfo.put(splitByTowDots[0], splitByTowDots[1].replaceAll("\"", ""));
                 }
             }
         }

@@ -8,16 +8,19 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class UAAModule {
-    private Map<String, ArrayList<my_date>> tenant;
-    private int LOGS_PER_MINUTE = 5;
-    private int NUM_OF_MINUTES_TO_CHECK = 0;
+public class UAAModule extends Interface_Module {
+    private Map<String, ArrayList<my_date>> tenant_map;
+    private static final int LOGS_PER_MINUTE = 5;
+    private static final int NUM_OF_MINUTES_TO_CHECK = 0;
+    private static final int NUM_OF_LINES_TO_GET = 1;
 
 
 
-    public UAAModule()
+    public UAAModule(String module_name, Framework_Module fm)
     {
-        tenant = new HashMap<>();
+        moduleName = module_name;
+        sync_to = fm;
+        tenant_map = new HashMap<>();
     }
 
     public class my_date {
@@ -77,32 +80,33 @@ public class UAAModule {
         }
     }
 
-    private boolean check_if_suspect(String line){
-        String[] phrases = {"88a65cea-5d1a-4c9d-86e0-c3842093c4af","authentication failed"};
-        for (String phrase: phrases){
-            if (line.toLowerCase().contains(phrase.toLowerCase())){
+    private boolean check_if_suspect(Map<String, String> line){
+        String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message","authentication failed"};
+        if (line.get(phrases[0]).toLowerCase().equals(phrases[1].toLowerCase()))
+        {
+            if (line.get(phrases[2]).toLowerCase().contains(phrases[3].toLowerCase()))
                 return true;
-            }
         }
         return false;
     }
 
-    private  Pair<String, my_date> parse_line(String line)
+    private  Pair<String, my_date> parse_line(Map<String, String> line)
     {
+        String msg = line.get("message");
         String inst = "";
         my_date d = new my_date();
-        String pattern = "\"time\":\"((\\d+)-(\\d+)-(\\d+))T((\\d+):(\\d+):(.*))\\+.*tnt\":\"(.*)\",\"corr.*";
+        //String pattern = ".*\"time\":\"((\\d+)-(\\d+)-(\\d+))T((\\d+):(\\d+):(.*))\\+.*tnt\":\"(.*)\",\"corr.*";
+        String pattern = ".*time[^\\d]+(\\d+)-(\\d+)-(\\d+)T(\\d+):(\\d+):(.*)\\+.*tnt[^\\da-zA-Z]+([\\da-zA-Z-]+).*corr.*";
         Pattern r = Pattern.compile(pattern);
-        line = "{\"time\":\"2017-12-10T11:34:18.388+0000\",\"tnt\":\"495bf861-b1f8-4de7-a8d6-b8a96f392337\",\"corr\":\"b0ac39f8ecb10b0f\",\"appn\":\"cf3-staging-uaa\",\"dpmt\":\"88a65cea-5d1a-4c9d-86e0-c3842093c4af\",\"inst\":\"25d195dd-6120-4b89-579a-a7a9921c50cf\",\"tid\":\"http-nio-8080-exec-5\",\"mod\":\"JwtBearerAssertionAuthenticationFilter.java\",\"lvl\":\"DEBUG\",\"msg\":\"jwt-bearer authentication failed. Unknown client.\"}";
-        Matcher m = r.matcher(line);
+        Matcher m = r.matcher(msg);
         if (m.find( )) {
-            inst = m.group(9);
-            if (!tenant.containsKey(inst)){
-                tenant.put(inst, new ArrayList<>());
+            inst = m.group(7);
+            if (!tenant_map.containsKey(inst)){
+                tenant_map.put(inst, new ArrayList<>());
             }
-            d = new my_date(Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)), Integer.parseInt(m.group(4)),
-                    Integer.parseInt(m.group(6)), Integer.parseInt(m.group(7)), Double.parseDouble(m.group(8)));
-            tenant.get(inst).add(d);
+            d = new my_date(Integer.parseInt(m.group(1)), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)),
+                    Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)), Double.parseDouble(m.group(6)));
+            tenant_map.get(inst).add(d);
         }
         return new Pair<>(inst, d);
     }
@@ -110,7 +114,7 @@ public class UAAModule {
     private boolean was_an_attack(Pair<String, my_date> p)
     {
         int count = 0;
-        ArrayList<my_date> logs = tenant.get(p.getKey());
+        ArrayList<my_date> logs = tenant_map.get(p.getKey());
         ArrayList<my_date> to_delete = new ArrayList<>();
         my_date curr_date = p.getValue();
         for (my_date log : logs){
@@ -128,30 +132,32 @@ public class UAAModule {
         return count >= LOGS_PER_MINUTE;
     }
 
-   public void raise_flag(){}
 
-    public void start()
+    public void run()
     {
-        String line = "";
-//        String line = wait_for_input();
+        ArrayList<Map<String, String>> lines = new ArrayList<>();
+        Map<String, String> line;
         Pair<String, my_date> res;
-        if (check_if_suspect(line)){
-            res = parse_line(line);
-            if (!res.getKey().isEmpty())
-            {
-                if (was_an_attack(res))
-                    raise_flag();
+        int count = 0;
+        while (sync_to.getData(moduleName, lines, NUM_OF_LINES_TO_GET) != 0) {
+            //sync_to.getData(moduleName, lines, NUM_OF_LINES_TO_GET);
+            for (int i=0; i < NUM_OF_LINES_TO_GET; i++) {
+                line = lines.get(i);
+                count ++ ;
+                if (check_if_suspect(line)) {
+                    res = parse_line(line);
+                    if (!res.getKey().isEmpty()) {
+                        if (was_an_attack(res))
+                            sync_to.alert(moduleName);
+                    }
+                }
             }
         }
+        System.out.println(tenant_map.size());
+
 
 
 
     }
 
-    public static void main(String[] args)
-
-    {
-        UAAModule a = new UAAModule();
-        a.parse_line("");
-    }
 }
