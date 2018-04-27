@@ -108,28 +108,6 @@ public class Feature_Extraction extends Interface_Module {
             i++;
         }
         System.out.println(allFeaturesVector);
-//        ArrayList<Map<String, String>> buff2 = new ArrayList<>();
-//        ArrayList<Map<String, String>> buff3 = new ArrayList<>();
-//
-//        sync_to.getData("Feature_Extraction", buff2, sample_size);
-//        sync_to.getData("Feature_Extraction", buff3, sample_size);
-//
-//        ArrayList<Map<String, String>> buff4 = new ArrayList<>();
-//        ArrayList<Map<String, String>> buff5 = new ArrayList<>();
-//
-//        sync_to.getData("Feature_Extraction", buff4, sample_size);
-//        sync_to.getData("Feature_Extraction", buff5, sample_size);
-////        printAppIds(buff);
-//        printAppIds(buff5);
-//
-//        Map<String, Double> features_vector2 = new HashMap<>();
-//        double avgLength2 = sampleAvgMsgLength(buff5, number_of_lines);
-//        Map.Entry<String, Integer> requestsParser2 = maxRequests(buff5, number_of_lines);
-//        features_vector2.put("msgLength", avgLength2);
-//        features_vector2.put("sampleMaxRequests", requestsParser2.getValue().doubleValue());
-//        maxAppId(sampleMaxRequestsAppIds, requestsParser2, features_vector2);
-//        System.out.println(features_vector2);
-
         //end sample
     }
 }
