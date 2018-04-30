@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Framework_Module  {
     private Map<String, Long> module_file_pos;
+    public Map<String, ArrayList<String>> modules_messages;
+    private boolean new_alert = true;
     private String input_path;
     private static final long INITIAL_VALUE = 0;
     private static final long END_OF_FILE = -1;
@@ -18,6 +18,7 @@ public class Framework_Module  {
     Framework_Module(ArrayList<String> modules_names, String input_path)
     {
         module_file_pos = new HashMap<>();
+        modules_messages = new HashMap<>();
         for (String module_name: modules_names)
         {
             module_file_pos.put(module_name, INITIAL_VALUE);
@@ -62,9 +63,28 @@ public class Framework_Module  {
         return lines_to_return;
     }
 
-    public synchronized void alert(String module_name)
+    public synchronized void getAlertData(Map<String, Deque<String>> UI_msg)
     {
-        System.out.println(module_name + " alert");
+        for (String key: modules_messages.keySet())
+        {
+            for (String msg: modules_messages.get(key))
+                UI_msg.get(key).addFirst(msg);
+        }
+        for (String key: modules_messages.keySet()) {
+            modules_messages.get(key).clear();
+        }
+
+    }
+    public synchronized void alert(String module_name, String message)
+    {
+
+        synchronized (modules_messages) {
+            if (!modules_messages.containsKey(module_name))
+                modules_messages.put(module_name, new ArrayList<>());
+            modules_messages.get(module_name).add(message);
+            modules_messages.notifyAll();
+        }
+
     }
 
 }

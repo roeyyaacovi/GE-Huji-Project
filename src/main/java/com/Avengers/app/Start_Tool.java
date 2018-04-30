@@ -9,13 +9,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Map;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
 
+@SpringBootApplication
 public class Start_Tool {
 
     private static final String package_name = "com.Avengers.app.";
 
     public static void main(String[] args) {
         if (args.length >= 2) {
+            SpringApplication.run(Start_Tool.class, args);
             String modules_demands_file = args[0];
             String log_file = args[1];
             try {
