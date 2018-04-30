@@ -10,9 +10,9 @@ import java.util.regex.Pattern;
 
 public class UAAModule extends Interface_Module {
     private Map<String, ArrayList<my_date>> tenant_map;
-    private static final int LOGS_PER_MINUTE = 5;
+    private static final int LOGS_PER_MINUTE = 10;
     private static final int NUM_OF_MINUTES_TO_CHECK = 0;
-    private static final int NUM_OF_LINES_TO_GET = 1;
+    private static final int NUM_OF_LINES_TO_GET = 2;
 
 
 
@@ -78,10 +78,17 @@ public class UAAModule extends Interface_Module {
             return other.year == this.year && other.month == this.month && other.day == this.day &&
                     other.hour == this.hour;
         }
+
+        public String toString()
+        {
+            return Integer.toString(this.year) +" " + Integer.toString(this.month) + " " + Integer.toString(this.day) + "," +
+                    Integer.toString(this.hour) + ":" + Integer.toString(this.minute) + ":" + Double.toString(this.second) + "\n";
+        }
     }
 
     private boolean check_if_suspect(Map<String, String> line){
-        String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message","authentication failed"};
+        String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
+                "Given client ID does not match authenticated client"};
         if (line.get(phrases[0]).toLowerCase().equals(phrases[1].toLowerCase()))
         {
             if (line.get(phrases[2]).toLowerCase().contains(phrases[3].toLowerCase()))
@@ -148,12 +155,13 @@ public class UAAModule extends Interface_Module {
                     res = parse_line(line);
                     if (!res.getKey().isEmpty()) {
                         if (was_an_attack(res))
-                            sync_to.alert(moduleName);
+                            sync_to.alert(res.getValue().toString());
                     }
                 }
             }
         }
-        System.out.println(tenant_map.size());
+        System.out.println(tenant_map.keySet());
+        System.out.println(tenant_map.values());
 
 
 
