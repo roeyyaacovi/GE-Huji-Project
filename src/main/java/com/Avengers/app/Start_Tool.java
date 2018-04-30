@@ -22,7 +22,6 @@ public class Start_Tool {
 
     public static void main(String[] args) {
         if (args.length >= 2) {
-            SpringApplication.run(Start_Tool.class, args);
             String modules_demands_file = args[0];
             String log_file = args[1];
             try {
@@ -37,6 +36,10 @@ public class Start_Tool {
                     modules_names.add(module_name);
                 }
                 Framework_Module fm = new Framework_Module(modules_names, log_file);
+                Interface_Module UIm = new UI_Module("UI_Module", fm, modules_names);
+                UIm.start();
+                modules_threads.add(UIm);
+                SpringApplication.run(Start_Tool.class, args);
                 for (String mname: modules_names) {
                     c = Class.forName(package_name + mname);
                     m = c.getConstructor(String.class, Framework_Module.class);
