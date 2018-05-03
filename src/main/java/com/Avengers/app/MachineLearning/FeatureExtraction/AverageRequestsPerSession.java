@@ -8,6 +8,11 @@ import java.util.Set;
 
 public class AverageRequestsPerSession implements Feature {
 
+    /* The name of the feature */
+    private static final String featureName = "minAvgRequestPerSession";
+
+    private Double featureValue = null;
+
     private ArrayList<IpAnalyze> getIps(ArrayList<Map<String, String>> buff)
     {
         // insert each ip into a list of all ips
@@ -26,7 +31,7 @@ public class AverageRequestsPerSession implements Feature {
 
     @Override
     public boolean calculateFeature(ArrayList<Map<String, String>> logData, int number_of_lines, Map<String, Feature> featureNameToObject) {
-        {
+
             ArrayList<IpAnalyze> allIps = getIps(logData); // get a list of all ips in the sample
 
             for (Map<String, String> line : logData)
@@ -57,19 +62,28 @@ public class AverageRequestsPerSession implements Feature {
                     }
                 }
             }
-            for (IpAnalyze ipa : allIps)
-                ipa.printData();
+
+        for (IpAnalyze ipa : allIps)
+        {
+            if(ipa.getAvgBetweenRequests() == 1)
+                continue;
+
+            if(null == featureValue){
+                featureValue = ipa.getAvgBetweenRequests();
+            }else{
+                if(ipa.getAvgBetweenRequests() < featureValue)
+                    featureValue = ipa.getAvgBetweenRequests();
+            }
         }
+
         return true;
     }
 
-    @Override
-    public Double getFeatureValue() {
-        return null;
+    public Double getFeatureValue(){
+        return featureValue;
     }
 
-    @Override
-    public String getFeatureName() {
-        return null;
+    public String getFeatureName(){
+        return featureName;
     }
 }

@@ -28,11 +28,11 @@ public class FeatureExtractor {
     }
 
     private void buildFeatureObjects(){
-
         featureNameToObject.put("avgMsgLength", new AvgMessageLength());
         featureNameToObject.put("maxConnectionsFromIp", new ConnectionsFromIP());
         featureNameToObject.put("maxRequests", new MaxRequests());
         featureNameToObject.put("maxAppId", new MaxAppId());
+        featureNameToObject.put("minAvgRequestPerSession", new AverageRequestsPerSession());
     }
 
 }
