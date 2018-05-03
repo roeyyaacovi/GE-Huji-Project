@@ -1,9 +1,6 @@
 package com.Avengers.app;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,6 +16,47 @@ import org.springframework.context.annotation.Bean;
 public class Start_Tool {
 
     private static final String package_name = "com.Avengers.app.";
+
+    private static void make_html_file(int modules_num) {
+        String sourceFileName = "java\\resources\\templates\\status_template.html";
+        String destinationFileName = "java\\resources\\templates\\status.html";
+        BufferedReader br = null;
+        BufferedWriter pw = null;
+        boolean write_modules_num = false;
+
+        try {
+            br = new BufferedReader(new FileReader(sourceFileName));
+            pw = new BufferedWriter(new FileWriter(destinationFileName));
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.toLowerCase().contains("<body>")) {
+                    write_modules_num = true;
+                    pw.write(line);
+                    pw.newLine();
+                    break;
+                }
+                if (line.toLowerCase().contains("</body>")) {
+                    write_modules_num = false;
+                    pw.write(line);
+                    pw.newLine();
+                    break;
+                }
+                if (write_modules_num){
+                    for (int i=1 ; i<= modules_num; i++) {
+                        pw.write(line.replaceAll("1", Integer.toString(i)));
+                        pw.newLine();
+                    }
+                }else{
+                    pw.write(line);
+                    pw.newLine();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         if (args.length >= 2) {
@@ -36,6 +74,7 @@ public class Start_Tool {
                     modules_names.add(module_name);
                 }
                 Framework_Module fm = new Framework_Module(modules_names, log_file);
+                make_html_file(modules_names.size());
                 Interface_Module UIm = new UI_Module("UI_Module", fm, modules_names);
                 UIm.start();
                 modules_threads.add(UIm);
