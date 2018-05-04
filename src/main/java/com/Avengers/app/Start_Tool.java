@@ -3,30 +3,26 @@ package com.Avengers.app;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Map;
-import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class Start_Tool {
 
-    private static final String package_name = "com.Avengers.app.";
+    private static final String PACKAGE_NAME = "com.Avengers.app.";
+    private static final String HTML_TEMPLATE = "src\\main\\resources\\templates\\status_template.html";
+    private static final String HTML_FINAL = "src\\main\\resources\\templates\\status.html";
 
     private static void make_html_file(int modules_num) {
-        String sourceFileName = "src\\main\\resources\\templates\\status_template.html";
-        String destinationFileName = "src\\main\\resources\\templates\\status.html";
         BufferedReader br = null;
         BufferedWriter pw = null;
         boolean write_modules_num = false;
 
         try {
-            br = new BufferedReader(new FileReader(sourceFileName));
-            pw = new BufferedWriter(new FileWriter(destinationFileName));
+            br = new BufferedReader(new FileReader(HTML_TEMPLATE));
+            pw = new BufferedWriter(new FileWriter(HTML_FINAL));
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.toLowerCase().contains("<body>")) {
@@ -82,7 +78,7 @@ public class Start_Tool {
                 modules_threads.add(UIm);
                 SpringApplication.run(Start_Tool.class, args);
                 for (String mname: modules_names) {
-                    c = Class.forName(package_name + mname);
+                    c = Class.forName(PACKAGE_NAME + mname);
                     m = c.getConstructor(String.class, Framework_Module.class);
                     o = m.newInstance(mname, fm);
                     Interface_Module new_module = Interface_Module.class.cast(o);

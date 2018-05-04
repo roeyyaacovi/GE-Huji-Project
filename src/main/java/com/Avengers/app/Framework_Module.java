@@ -14,6 +14,7 @@ public class Framework_Module  {
     private static final long INITIAL_VALUE = 0;
     private static final long END_OF_FILE = -1;
     private static final long SKIP_LINES = 2;
+    private static final int ERROR_SIGN = -1;
 
     Framework_Module(ArrayList<String> modules_names, String input_path)
     {
@@ -57,6 +58,7 @@ public class Framework_Module  {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
+            return ERROR_SIGN;
         }
         new_pos += lines_read;
         module_file_pos.put(module_name, new_pos);
