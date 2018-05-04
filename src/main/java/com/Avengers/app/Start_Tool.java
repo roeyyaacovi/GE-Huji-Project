@@ -18,8 +18,8 @@ public class Start_Tool {
     private static final String package_name = "com.Avengers.app.";
 
     private static void make_html_file(int modules_num) {
-        String sourceFileName = "java\\resources\\templates\\status_template.html";
-        String destinationFileName = "java\\resources\\templates\\status.html";
+        String sourceFileName = "src\\main\\resources\\templates\\status_template.html";
+        String destinationFileName = "src\\main\\resources\\templates\\status.html";
         BufferedReader br = null;
         BufferedWriter pw = null;
         boolean write_modules_num = false;
@@ -33,13 +33,13 @@ public class Start_Tool {
                     write_modules_num = true;
                     pw.write(line);
                     pw.newLine();
-                    break;
+                    continue;
                 }
                 if (line.toLowerCase().contains("</body>")) {
                     write_modules_num = false;
                     pw.write(line);
                     pw.newLine();
-                    break;
+                    continue;
                 }
                 if (write_modules_num){
                     for (int i=1 ; i<= modules_num; i++) {
@@ -51,6 +51,8 @@ public class Start_Tool {
                     pw.newLine();
                 }
             }
+            br.close();
+            pw.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
