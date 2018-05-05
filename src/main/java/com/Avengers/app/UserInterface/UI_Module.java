@@ -1,19 +1,12 @@
-package com.Avengers.app;
+package com.Avengers.app.UserInterface;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.Avengers.app.Framework.Framework_Module;
+import com.Avengers.app.Framework.Interface_Module;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 
-public class UI_Module extends Interface_Module{
+public class UI_Module extends Interface_Module {
 
     public static  Map<String, Deque<String>> modules_alerts;
 

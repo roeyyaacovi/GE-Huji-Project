@@ -1,14 +1,13 @@
 package com.Avengers.app.Security;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import com.Avengers.app.Framework_Module;
-import com.Avengers.app.Interface_Module;
+import com.Avengers.app.Framework.Framework_Module;
+import com.Avengers.app.Framework.Interface_Module;
 
 public class SecurityModule extends Interface_Module{
     /* Full path to file that will hold a list of connections between domains */
@@ -90,7 +89,7 @@ public class SecurityModule extends Interface_Module{
 
                 if(!checkLine(parsedLogData)){
                     /* Raise flag to framework */
-                    frameworkModule.alert(moduleName);
+                    frameworkModule.alert(moduleName, "");
                 }
 
             }

@@ -5,6 +5,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
+import com.Avengers.app.UserInterface.UI_Module;
+import com.Avengers.app.Framework.Framework_Module;
+import com.Avengers.app.Framework.Interface_Module;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

@@ -1,11 +1,9 @@
 package com.Avengers.app.MachineLearning;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-import com.Avengers.app.Interface_Module;
-import com.Avengers.app.Framework_Module;
-import com.Avengers.app.MachineLearning.FeatureExtraction.Feature;
+import com.Avengers.app.Framework.Interface_Module;
+import com.Avengers.app.Framework.Framework_Module;
 import com.Avengers.app.MachineLearning.FeatureExtraction.FeatureExtractor;
 
 public class MachineLearningModule extends Interface_Module{
