@@ -41,7 +41,7 @@ public class MaxAppId implements Feature {
         return featureValue;
     }
 
-    public static String  getFeatureName(){
+    public String  getFeatureName(){
         return featureName;
     }
 }
