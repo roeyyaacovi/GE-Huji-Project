@@ -15,7 +15,7 @@ public class Framework_Module  {
     private static final long SKIP_LINES = 2;
     private static final int ERROR_SIGN = -1;
 
-    Framework_Module(ArrayList<String> modules_names, String input_path)
+    public Framework_Module(ArrayList<String> modules_names, String input_path)
     {
         module_file_pos = new HashMap<>();
         modules_messages = new HashMap<>();
