@@ -16,29 +16,9 @@ public class MaxRequests implements Feature {
     public boolean calculateFeature(ArrayList<Map<String, String>> logData, int number_of_lines,
                                     Map<String, Feature> featureNameToObject){
 
+        Map<String, Double> all_app_ids = calculateRequestsPerAppName(logData);
 
-        Map<String, Double> all_app_ids = new HashMap<>();
-        for (Map<String, String> line : logData){
-            String app_id_to_check = line.get("app_id");
-            if(all_app_ids.containsKey(app_id_to_check))
-            {
-                all_app_ids.put(app_id_to_check, all_app_ids.get(app_id_to_check)+1);
-            }
-            else
-            {
-                all_app_ids.put(app_id_to_check, (double)1);
-            }
-        }
-        double maxval = 0;
-        Map.Entry<String, Double> retEntry = null;
-        for (Map.Entry<String, Double> entry : all_app_ids.entrySet())
-        {
-            if (entry.getValue() > maxval)
-            {
-                retEntry = entry;
-                maxval = entry.getValue();
-            }
-        }
+        Map.Entry<String, Double> retEntry = getAppWithMaxRequests(all_app_ids);
 
         featureValue = retEntry.getValue();
         appName = retEntry.getKey();
@@ -46,8 +26,40 @@ public class MaxRequests implements Feature {
         return true;
     }
 
+    private Map.Entry<String, Double> getAppWithMaxRequests(Map<String, Double> all_app_ids){
+        double maxValue = 0;
+        Map.Entry<String, Double> retEntry = null;
 
-    public String getAppName(){
+        for (Map.Entry<String, Double> entry : all_app_ids.entrySet())
+        {
+            if (entry.getValue() > maxValue)
+            {
+                retEntry = entry;
+                maxValue = entry.getValue();
+            }
+        }
+
+        return retEntry;
+    }
+
+    private Map<String, Double> calculateRequestsPerAppName(ArrayList<Map<String, String>> logData){
+        Map<String, Double> all_app_ids = new HashMap<>();
+
+        for (Map<String, String> line : logData){
+            String app_id_to_check = line.get("app_id");
+
+            if(all_app_ids.containsKey(app_id_to_check)) {
+                all_app_ids.put(app_id_to_check, all_app_ids.get(app_id_to_check)+1);
+            }
+            else {
+                all_app_ids.put(app_id_to_check, (double)1);
+            }
+        }
+
+        return all_app_ids;
+    }
+
+    String getAppName(){
         return appName;
     }
 

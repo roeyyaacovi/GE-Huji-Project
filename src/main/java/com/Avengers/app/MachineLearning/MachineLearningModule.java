@@ -15,7 +15,7 @@ public class MachineLearningModule extends Interface_Module{
 
     ArrayList<ArrayList<Double>> allFeatureVectors = new ArrayList<>();
 
-    private static final int sampleSize = 10;
+    private static final int sampleSize = 100;
 
     public MachineLearningModule(String moduleName, Framework_Module frameworkModule){
         this.moduleName = moduleName;
@@ -23,8 +23,6 @@ public class MachineLearningModule extends Interface_Module{
     }
 
     public void run() {
-        ArrayList<Map<String, Integer>> sampleMaxRequestsAppIds = new ArrayList<>();
-
         while(true) {
             ArrayList<Map<String, String>> logData = new ArrayList<>();
             frameworkModule.getData(moduleName, logData, sampleSize);
@@ -32,7 +30,6 @@ public class MachineLearningModule extends Interface_Module{
             ArrayList<Double> featureVector = featureExtractor.createFeaturesVector(logData, sampleSize);
 
             allFeatureVectors.add(featureVector);
-
         }
     }
 }

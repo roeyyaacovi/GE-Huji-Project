@@ -7,14 +7,12 @@ import java.util.regex.Pattern;
 
 public class TimeSlot {
     private String strStartTime;
-    private String strResponseTime;
     private long longStartTime;
     private long nanoSecondsResponseTime;
 
 
-    public TimeSlot(String startTime, String responseTime){
+    TimeSlot(String startTime, String responseTime){
         this.strStartTime = startTime;
-        this.strResponseTime = responseTime;
         this.nanoSecondsResponseTime = Integer.parseInt(responseTime);
     }
 
@@ -24,11 +22,11 @@ public class TimeSlot {
         return 0;
     }
 
-    public long getNanoSecondsResponseTime(){
+    private long getNanoSecondsResponseTime(){
         return nanoSecondsResponseTime;
     }
 
-    public int convertStringToDate(){
+    private int convertStringToDate(){
         Calendar calendar = Calendar.getInstance();
         Pattern datePattern = Pattern.compile("([0-9]*?)-([0-9]*?)-([0-9]*)T(.*)");
 
@@ -66,7 +64,7 @@ public class TimeSlot {
         return 0;
     }
 
-    public long getStartTimeDate() {
+    private long getStartTimeDate() {
         return longStartTime;
     }
 
@@ -76,7 +74,7 @@ public class TimeSlot {
      * @param other The time slot to check
      * @return True if inside false if not
      */
-    public boolean isInsideTimeSlot(TimeSlot other){
+    boolean isInsideTimeSlot(TimeSlot other){
         double differenceNanoSeconds = 0;
 
         if(other.getStartTimeDate() < this.getStartTimeDate()){

@@ -1,12 +1,14 @@
 package com.Avengers.app.MachineLearning.FeatureExtraction;
 
+import com.Avengers.app.MachineLearning.FeatureExtraction.AverageRequestsPerSession.AverageRequestsPerSession;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FeatureExtractor {
     /* Array that holds an instance of each of the feature classes */
-    private Map<String, Feature> featureNameToObject;
+    private Map<String, Feature> featureNameToObject = new LinkedHashMap<>();
 
     public FeatureExtractor(){
         buildFeatureObjects();

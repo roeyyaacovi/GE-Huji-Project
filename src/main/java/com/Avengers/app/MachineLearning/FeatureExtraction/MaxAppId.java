@@ -24,7 +24,8 @@ public class MaxAppId implements Feature {
             return false;
         }
 
-        /* If the key is not in the map, then we don't care and just return that its ok */
+        /* If a mapping between the App Id and an integer representing it exists, return it.
+           If it doesn't, create one */
         if(sampleMaxRequestsAppIds.containsKey(maxRequestsFeature.getAppName())){
             featureValue = sampleMaxRequestsAppIds.get(maxRequestsFeature.getAppName());
             return true;

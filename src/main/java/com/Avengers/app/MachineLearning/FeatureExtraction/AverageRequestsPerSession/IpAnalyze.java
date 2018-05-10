@@ -1,55 +1,49 @@
-package com.Avengers.app.MachineLearning.FeatureExtraction;
+package com.Avengers.app.MachineLearning.FeatureExtraction.AverageRequestsPerSession;
 
 import java.math.BigInteger;
 
-public class IpAnalyze {
-    private String ip;
-    private BigInteger lastTimeStamp;
-    private int numberOfRequests;
-    private double avgBetweenRequests;
+class IpAnalyze {
+    private String ip = null;
+    private BigInteger lastTimeStamp = null;
+    private int numberOfRequests = 0;
+    private double avgBetweenRequests = 0.0;
+
     IpAnalyze(String ip, BigInteger lastTimeStamp, int numberOfRequests, double avgBetweenRequests){
         this.ip = ip;
         this.lastTimeStamp = lastTimeStamp;
         this.numberOfRequests = numberOfRequests;
         this.avgBetweenRequests = avgBetweenRequests;
     }
-    void printData()
-    {
+
+    void printData() {
         System.out.println(this.ip + " " + this.lastTimeStamp + " " + this.numberOfRequests + " " + this.avgBetweenRequests);
     }
 
-    String getIp()
-    {
+    String getIp() {
         return this.ip;
     }
 
-    BigInteger getLastTimeStamp()
-    {
+    BigInteger getLastTimeStamp() {
         return this.lastTimeStamp;
     }
 
-    int getNumberOfRequests()
-    {
+    int getNumberOfRequests() {
         return this.numberOfRequests;
     }
 
-    double getAvgBetweenRequests()
-    {
+    double getAvgBetweenRequests() {
         return this.avgBetweenRequests;
     }
 
-    void setLastTimeStamp(BigInteger newLastTimeStamp)
-    {
+    void setLastTimeStamp(BigInteger newLastTimeStamp) {
         this.lastTimeStamp = newLastTimeStamp;
     }
 
-    void setNumberOfRequests(int newNumberOfRequests)
-    {
+    void setNumberOfRequests(int newNumberOfRequests) {
         this.numberOfRequests = newNumberOfRequests;
     }
 
-    void setAvgBetweenRequests(double newAvgBetweenRequests)
-    {
+    void setAvgBetweenRequests(double newAvgBetweenRequests) {
         this.avgBetweenRequests = newAvgBetweenRequests;
     }
 }

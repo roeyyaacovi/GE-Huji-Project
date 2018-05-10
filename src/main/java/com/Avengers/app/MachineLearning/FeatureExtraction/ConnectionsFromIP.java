@@ -7,7 +7,7 @@ import java.util.Map;
 public class ConnectionsFromIP implements Feature{
 
     /* A mapping between the ip, and the number of connections it made in the sample */
-    private Map<String, Integer> ipToNumOfConnections = new HashMap<String, Integer>();
+    private Map<String, Integer> ipToNumOfConnections = new HashMap<>();
 
     /* The name of the feature */
     private static final String featureName = "maxConnectionsFromIp";
