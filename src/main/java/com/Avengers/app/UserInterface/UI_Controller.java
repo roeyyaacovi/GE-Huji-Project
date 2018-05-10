@@ -3,9 +3,10 @@ package com.Avengers.app.UserInterface;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 public class UI_Controller {
 
     private static final String ATTRIBUTE_1 = "name";
