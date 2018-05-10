@@ -2,13 +2,14 @@ package com.Avengers.app.UserInterface;
 
 import com.Avengers.app.Framework.Framework_Module;
 import com.Avengers.app.Framework.Interface_Module;
+import com.Avengers.app.Framework.Module_Alert;
 
 import java.util.*;
 
 
 public class UI_Module extends Interface_Module {
 
-    public static  Map<String, Deque<String>> modules_alerts;
+    public static  Map<String, Deque<Module_Alert>> modules_alerts;
 
     public UI_Module(String module_name, Framework_Module fm, ArrayList<String> modules_names)
     {
