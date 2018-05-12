@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.Avengers.app.Framework.Framework_Module;
 import com.Avengers.app.Framework.Interface_Module;
+import com.Avengers.app.Framework.Module_Alert;
 
 public class SecurityModule extends Interface_Module{
     /* Full path to file that will hold a list of connections between domains */
@@ -15,9 +16,6 @@ public class SecurityModule extends Interface_Module{
 
     /* A mapping between the domain's name, and the Node that represents it */
     private Map<String, Node> domainToNode = new HashMap<String, Node>();
-
-    /* Framework module used to get more data, and notify the framework when something happened */
-    private Framework_Module frameworkModule;
 
     /* Parser object that parses the log message */
     private Parser logParser = new Parser();
@@ -28,7 +26,7 @@ public class SecurityModule extends Interface_Module{
     public SecurityModule(String moduleName, Framework_Module frameworkModule)
     {
         this.moduleName = moduleName;
-        this.frameworkModule = frameworkModule;
+        this.sync_to = frameworkModule;
     }
 
 
@@ -71,14 +69,12 @@ public class SecurityModule extends Interface_Module{
 
     /**
      * Starts the main loop of the module.
-     * @return 0 if successfully started
      */
     public void run(){
         ArrayList<Map<String, String>> logData = new ArrayList<>();
 
-
         while(true){
-            frameworkModule.getData(moduleName, logData, 20);
+            sync_to.getData(moduleName, logData, 20);
 
             for(Map<String, String> logLine: logData){
                 ArrayList<String> parsedLogData = logParser.parseLine(logLine);
@@ -89,7 +85,10 @@ public class SecurityModule extends Interface_Module{
 
                 if(!checkLine(parsedLogData)){
                     /* Raise flag to framework */
-                    frameworkModule.alert(moduleName, "");
+                    Module_Alert module_alert = new Module_Alert("Security.SecurityModule", parsedLogData.get(1),
+                            "Security Module", logLine);
+
+                    sync_to.alert(module_alert);
                 }
 
             }

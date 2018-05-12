@@ -13,9 +13,9 @@ public class MachineLearningModule extends Interface_Module{
 
     private FeatureExtractor featureExtractor = new FeatureExtractor();
 
-    ArrayList<ArrayList<Double>> allFeatureVectors = new ArrayList<>();
+    private ArrayList<ArrayList<Double>> allFeatureVectors = new ArrayList<>();
 
-    private static final int sampleSize = 100;
+    private static final int sampleSize = 1000;
 
     public MachineLearningModule(String moduleName, Framework_Module frameworkModule){
         this.moduleName = moduleName;

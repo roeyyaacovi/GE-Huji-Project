@@ -148,8 +148,8 @@ public class UAAModule extends Interface_Module {
                 if (check_if_suspect(line)) {
                     res = parse_line(line);
                     if (!res.getKey().isEmpty()) {
-                        if (was_an_attack(res))
-                            sync_to.alert(moduleName, "");
+                        //if (was_an_attack(res))
+                            //sync_to.alert(moduleName, "");
                     }
                 }
             }
