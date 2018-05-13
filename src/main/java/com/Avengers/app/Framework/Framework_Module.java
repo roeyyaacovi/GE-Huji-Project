@@ -76,11 +76,10 @@ public class Framework_Module  {
         }
 
     }
-    public synchronized void alert(Module_Alert module_alert)
+    public synchronized void alert(String module_name, Module_Alert module_alert)
     {
 
         synchronized (modules_messages) {
-            String module_name = module_alert.getModule_name();
             if (!modules_messages.containsKey(module_name))
                 modules_messages.put(module_name, new ArrayList<>());
             modules_messages.get(module_name).add(module_alert);

@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="GE-Huji-Project" />
-        <module name="GE-Huji-Project (1)" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

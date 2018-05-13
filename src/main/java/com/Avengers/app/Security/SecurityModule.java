@@ -85,10 +85,10 @@ public class SecurityModule extends Interface_Module{
 
                 if(!checkLine(parsedLogData)){
                     /* Raise flag to framework */
-                    Module_Alert module_alert = new Module_Alert("Security.SecurityModule", parsedLogData.get(1),
+                    Module_Alert module_alert = new Module_Alert(parsedLogData.get(1),
                             "Security Module", logLine);
 
-                    sync_to.alert(module_alert);
+                    sync_to.alert("Security.SecurityModule", module_alert);
                 }
 
             }
