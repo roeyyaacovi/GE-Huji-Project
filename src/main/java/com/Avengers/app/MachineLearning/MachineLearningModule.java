@@ -15,7 +15,7 @@ public class MachineLearningModule extends Interface_Module{
 
     private ArrayList<ArrayList<Double>> allFeatureVectors = new ArrayList<>();
 
-    private static final int sampleSize = 1000;
+    private static final int sampleSize = 500000;
 
     public MachineLearningModule(String moduleName, Framework_Module frameworkModule){
         this.moduleName = moduleName;
