@@ -2,8 +2,10 @@ package com.Avengers.app.UAA;
 
 import com.Avengers.app.Framework.Framework_Module;
 import com.Avengers.app.Framework.Interface_Module;
+import com.Avengers.app.Framework.Module_Alert;
 import javafx.util.Pair;
 
+import java.text.DateFormatSymbols;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,7 +15,8 @@ public class UAAModule extends Interface_Module {
     private Map<String, ArrayList<my_date>> tenant_map;
     private static final int LOGS_PER_MINUTE = 5;
     private static final int NUM_OF_MINUTES_TO_CHECK = 0;
-    private static final int NUM_OF_LINES_TO_GET = 1;
+    private static final int NUM_OF_LINES_TO_GET = 10;
+    private static final String MESSAGE_TEMPLATE = "UAA attack from ";
 
 
 
@@ -79,14 +82,22 @@ public class UAAModule extends Interface_Module {
             return other.year == this.year && other.month == this.month && other.day == this.day &&
                     other.hour == this.hour;
         }
+
+        public String toString()
+        {
+            return Integer.toString(this.year) +" " + Integer.toString(this.month) + " " + Integer.toString(this.day) + "," +
+                    Integer.toString(this.hour) + ":" + Integer.toString(this.minute) + ":" + Double.toString(this.second) + "\n";
+        }
     }
 
     private boolean check_if_suspect(Map<String, String> line){
-        String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message","authentication failed"};
-        if (line.get(phrases[0]).toLowerCase().equals(phrases[1].toLowerCase()))
-        {
-            if (line.get(phrases[2]).toLowerCase().contains(phrases[3].toLowerCase()))
-                return true;
+        String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
+                "Given client ID does not match authenticated client"};
+        if (line.keySet().contains(phrases[0]) && line.keySet().contains(phrases[2])) {
+            if (line.get(phrases[0]).toLowerCase().equals(phrases[1].toLowerCase())) {
+                if (line.get(phrases[2]).toLowerCase().contains(phrases[3].toLowerCase()))
+                    return true;
+            }
         }
         return false;
     }
@@ -117,17 +128,23 @@ public class UAAModule extends Interface_Module {
         int count = 0;
         ArrayList<my_date> logs = tenant_map.get(p.getKey());
         ArrayList<my_date> to_delete = new ArrayList<>();
+        ArrayList<my_date> to_check = new ArrayList<>();
         my_date curr_date = p.getValue();
         for (my_date log : logs){
             if (curr_date.same_minute(log))
             {
                 count ++;
+                to_check.add(log);
             }
             if (!(log.same_hour(curr_date)) || (log.same_hour(curr_date) && curr_date.minute - log.minute > NUM_OF_MINUTES_TO_CHECK))
             {
                 to_delete.add(log);
             }
 
+        }
+        if (count >= LOGS_PER_MINUTE)
+        {
+            logs.removeAll(to_check);
         }
         logs.removeAll(to_delete);
         return count >= LOGS_PER_MINUTE;
@@ -140,21 +157,25 @@ public class UAAModule extends Interface_Module {
         Map<String, String> line;
         Pair<String, my_date> res;
         int count = 0;
-        while (sync_to.getData(moduleName, lines, NUM_OF_LINES_TO_GET) != 0) {
+        while ((count = sync_to.getData(moduleName, lines, NUM_OF_LINES_TO_GET)) != 0) {
             //sync_to.getData(moduleName, lines, NUM_OF_LINES_TO_GET);
-            for (int i=0; i < NUM_OF_LINES_TO_GET; i++) {
+            for (int i=0; i <count; i++) {
                 line = lines.get(i);
-                count ++ ;
                 if (check_if_suspect(line)) {
                     res = parse_line(line);
                     if (!res.getKey().isEmpty()) {
-                        //if (was_an_attack(res))
-                            //sync_to.alert(moduleName, "");
+                        if (was_an_attack(res)) {
+                            // tenant_map.get(res.getKey()).clear();
+                            Module_Alert ma = new Module_Alert(res.getValue().toString(), MESSAGE_TEMPLATE + res.getKey(), null);
+                            sync_to.alert(res.getKey(), ma);
+                        }
                     }
                 }
             }
+            lines.clear();
         }
-        System.out.println(tenant_map.size());
+        // System.out.println(tenant_map.keySet());
+        // System.out.println(tenant_map.values());
 
 
 
