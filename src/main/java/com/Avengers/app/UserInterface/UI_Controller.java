@@ -18,19 +18,15 @@ public class UI_Controller {
     private static final String ATTRIBUTE_2 = "msg";
 
     @GetMapping("/status")
-    private Map<String, Deque<Module_Alert>> status(Model model) {
-//        int i = 1;
-//        for (String module: UI_Module.modules_alerts.keySet()) {
-//            model.addAttribute(ATTRIBUTE_1 + Integer.toString(i), module);
-//            model.addAttribute(ATTRIBUTE_2 + Integer.toString(i), UI_Module.modules_alerts.get(module).getFirst());
-//            i++;
-//        }
-//        return "status";
-      //  return UI_Module.modules_alerts.get("test_module.test_module").getFirst();
-//        ArrayList<Module_Alert> t = new ArrayList<>();
-//        t.add(new Module_Alert("a", "b", "c", null));
-//        t.add(new Module_Alert("d", "e", "f", null));
-//        return t;
-        return UI_Module.modules_alerts;
+    //private Map<String, Deque<Module_Alert>> status(Model model) {
+    private String status(Model model) {
+        int i = 1;
+        for (String module: UI_Module.modules_alerts.keySet()) {
+            model.addAttribute(ATTRIBUTE_1 + Integer.toString(i), module);
+            model.addAttribute(ATTRIBUTE_2 + Integer.toString(i), UI_Module.modules_alerts.get(module).getFirst());
+            i++;
+        }
+        return "status";
+    //    return UI_Module.modules_alerts;
     }
 }

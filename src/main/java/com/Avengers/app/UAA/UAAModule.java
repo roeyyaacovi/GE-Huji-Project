@@ -94,6 +94,7 @@ public class UAAModule extends Interface_Module {
         String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
                 "Given client ID does not match authenticated client"};
         if (line.keySet().contains(phrases[0]) && line.keySet().contains(phrases[2])) {
+            line.get(phrases[0]).replaceAll("\"", "");
             if (line.get(phrases[0]).toLowerCase().equals(phrases[1].toLowerCase())) {
                 if (line.get(phrases[2]).toLowerCase().contains(phrases[3].toLowerCase()))
                     return true;
@@ -167,7 +168,8 @@ public class UAAModule extends Interface_Module {
                         if (was_an_attack(res)) {
                             // tenant_map.get(res.getKey()).clear();
                             Module_Alert ma = new Module_Alert(res.getValue().toString(), MESSAGE_TEMPLATE + res.getKey(), null);
-                            sync_to.alert(res.getKey(), ma);
+                            //sync_to.alert(res.getKey(), ma);
+                            System.out.println("alert");
                         }
                     }
                 }

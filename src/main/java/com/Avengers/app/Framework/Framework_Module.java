@@ -49,8 +49,8 @@ public class Framework_Module  {
                         lines_to_return++;
                         parsed_line = Parser.getAttributesSet(line);
                         buff.add(parsed_line);
-                        line = reader.readLine();
-                        lines_read++;
+            //            line = reader.readLine();
+             //           lines_read++;
                     }
                 }
             }
