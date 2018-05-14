@@ -6,9 +6,6 @@ import java.util.Map;
 
 public class ConnectionsFromIP implements Feature{
 
-    /* A mapping between the ip, and the number of connections it made in the sample */
-    private Map<String, Integer> ipToNumOfConnections = new HashMap<>();
-
     /* The name of the feature */
     private static final String featureName = "maxConnectionsFromIp";
 
@@ -17,17 +14,20 @@ public class ConnectionsFromIP implements Feature{
     public boolean calculateFeature(ArrayList<Map<String, String>> logData, int number_of_lines,
                                     Map<String, Feature> featureNameToObject){
 
+        /* A mapping between the ip, and the number of connections it made in the sample */
+        Map<String, Integer> ipToNumOfConnections = new HashMap<>();
+
         if(number_of_lines == 0){
             return false;
         }
 
         for(Map<String, String> logLine: logData){
-            if(!handleLogLine(logLine)){
+            if(!handleLogLine(logLine, ipToNumOfConnections)){
                 return false;
             }
         }
 
-        featureValue = (double)getMaxConnections()/number_of_lines;
+        featureValue = (double)getMaxConnections(ipToNumOfConnections)/number_of_lines;
 
         return true;
     }
@@ -40,7 +40,7 @@ public class ConnectionsFromIP implements Feature{
         return featureName;
     }
 
-    private Integer getMaxConnections(){
+    private Integer getMaxConnections(Map<String, Integer> ipToNumOfConnections){
         Map.Entry<String, Integer> maxEntry = null;
 
         for (Map.Entry<String, Integer> entry : ipToNumOfConnections.entrySet())
@@ -58,7 +58,7 @@ public class ConnectionsFromIP implements Feature{
         return 0;
     }
 
-    private boolean handleLogLine(Map<String, String> logLine){
+    private boolean handleLogLine(Map<String, String> logLine, Map<String, Integer> ipToNumOfConnections){
         String IpAddress = logLine.get("ip");
 
         if(IpAddress == null){

@@ -12,7 +12,8 @@ import com.Avengers.app.Framework.Module_Alert;
 
 public class SecurityModule extends Interface_Module{
     /* Full path to file that will hold a list of connections between domains */
-    private static final String graphInputFile = "C:\\Users\\roeyy\\Desktop\\School\\GE-Huji-Project\\graph.txt";
+    private static final String graphInputFile = "C:\\Users\\roeyy\\Desktop\\School\\graph.txt";
+    //private static final String graphInputFile = "graph.txt";
 
     /* A mapping between the domain's name, and the Node that represents it */
     private Map<String, Node> domainToNode = new HashMap<String, Node>();
@@ -29,13 +30,12 @@ public class SecurityModule extends Interface_Module{
         this.sync_to = frameworkModule;
     }
 
-
     /**
      * Read input file that has the dependencies between each server. It is built so that each row has a
      * pair. The right domain is the domain that should only be accessed through the left domain.
      */
     private boolean buildGraph(){
-        BufferedReader br = null;
+        BufferedReader br;
         String sCurrentLine;
 
         try {
@@ -59,7 +59,7 @@ public class SecurityModule extends Interface_Module{
         return true;
     }
 
-    public int init(){
+    private int init(){
         if(!buildGraph()){
             return -1;
         }
@@ -73,8 +73,20 @@ public class SecurityModule extends Interface_Module{
     public void run(){
         ArrayList<Map<String, String>> logData = new ArrayList<>();
 
+        if(-1 == init()){
+            return;
+        }
+
         while(true){
-            sync_to.getData(moduleName, logData, 20);
+            /* If no new data, sleep for a minute then ask again */
+            if( 0 == sync_to.getData(moduleName, logData, 20)){
+                try{
+                    Thread.sleep(60000);
+                    continue;
+                }catch (InterruptedException e){
+                    return;
+                }
+            }
 
             for(Map<String, String> logLine: logData){
                 ArrayList<String> parsedLogData = logParser.parseLine(logLine);
