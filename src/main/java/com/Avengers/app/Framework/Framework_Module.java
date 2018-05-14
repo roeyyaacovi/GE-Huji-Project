@@ -28,7 +28,7 @@ public class Framework_Module  {
 
     public synchronized int getData(String module_name, ArrayList<Map<String, String>> buff, int num_of_lines)
     {
-        System.out.println("get data " + module_name);
+        //System.out.println("get data " + module_name);
         BufferedReader reader = null;
         long pos = module_file_pos.get(module_name);
         long new_pos = pos;
@@ -49,8 +49,8 @@ public class Framework_Module  {
                         lines_to_return++;
                         parsed_line = Parser.getAttributesSet(line);
                         buff.add(parsed_line);
-            //            line = reader.readLine();
-             //           lines_read++;
+                        line = reader.readLine();
+                        lines_read++;
                     }
                 }
             }

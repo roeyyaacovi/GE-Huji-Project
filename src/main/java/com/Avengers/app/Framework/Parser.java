@@ -16,7 +16,10 @@ public class Parser {
         Map<String, String> line = new HashMap<>();
         String[] msgAfterSplit = msg.split("message_type");
         String msgBody = msgAfterSplit[0].split("message:")[1];
-        String afterMsgType = "message_type" + msgAfterSplit[1];
+        String afterMsgType = "message_type";
+        if (msgAfterSplit.length > 1) {
+            afterMsgType += msgAfterSplit[1];
+        }
         msgAfterSplit = afterMsgType.split("\\s");
         for (String splitBySpace : msgAfterSplit) {
             if (splitBySpace.contains(":") && !splitBySpace.equals(":")) {
@@ -45,7 +48,8 @@ public class Parser {
                     allInfo.putAll(getAttributeLogMessage(splitByLogMessage));
                     break;
                 } else {
-                    allInfo.put(splitByTowDots[0], splitByTowDots[1]);
+                    if (splitByTowDots.length > 1)
+                        allInfo.put(splitByTowDots[0], splitByTowDots[1]);
                 }
             }
         }

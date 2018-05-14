@@ -15,7 +15,7 @@ public class UAAModule extends Interface_Module {
     private Map<String, ArrayList<my_date>> tenant_map;
     private static final int LOGS_PER_MINUTE = 5;
     private static final int NUM_OF_MINUTES_TO_CHECK = 0;
-    private static final int NUM_OF_LINES_TO_GET = 10;
+    private static final int NUM_OF_LINES_TO_GET = 2000;
     private static final String MESSAGE_TEMPLATE = "UAA attack from ";
 
 
@@ -94,7 +94,7 @@ public class UAAModule extends Interface_Module {
         String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
                 "Given client ID does not match authenticated client"};
         if (line.keySet().contains(phrases[0]) && line.keySet().contains(phrases[2])) {
-            line.get(phrases[0]).replaceAll("\"", "");
+            line.put(phrases[0], line.get(phrases[0]).replaceAll("\"", ""));
             if (line.get(phrases[0]).toLowerCase().equals(phrases[1].toLowerCase())) {
                 if (line.get(phrases[2]).toLowerCase().contains(phrases[3].toLowerCase()))
                     return true;
