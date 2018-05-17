@@ -15,16 +15,16 @@ import java.util.regex.Pattern;
 
 public class Extract_Features {
 
-    private Map<String, Integer> tenant_fail;
-    private Map<String, Integer> tenant_success;
-    private Map<String, ArrayList<Double>> tenant_time_differences;
-    private Map<String, my_time> tenant_last_time_fail;
+    private static Map<String, Integer> tenant_fail;
+    private static Map<String, Integer> tenant_success;
+    private static Map<String, ArrayList<Double>> tenant_time_differences;
+    private static Map<String, my_time> tenant_last_time_fail;
     private static final double TO_SECONDS = 60;
 
 
 
 
-    public class my_time {
+    public static class my_time {
         private int hour;
         private int minute;
         private double second;
@@ -47,7 +47,7 @@ public class Extract_Features {
         }
     }
 
-    public class Feature_Vector
+    public static class Feature_Vector
     {
         private int max_num_fails;
         private int min_num_success;
@@ -76,7 +76,7 @@ public class Extract_Features {
         }
     }
 
-        private boolean check_if_fail(Map<String, String> line){
+        private static boolean check_if_fail(Map<String, String> line){
         String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
                 "Given client ID does not match authenticated client"};
         if (line.keySet().contains(phrases[0]) && line.keySet().contains(phrases[2])) {
@@ -89,7 +89,7 @@ public class Extract_Features {
         return false;
     }
 
-    private boolean check_if_success(Map<String, String> line){
+    private static boolean check_if_success(Map<String, String> line){
         String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
                 "ClientAuthenticationSuccess"};
         if (line.keySet().contains(phrases[0]) && line.keySet().contains(phrases[2])) {
@@ -102,7 +102,7 @@ public class Extract_Features {
         return false;
     }
 
-    private void analyze_line(Map<String, String> line)
+    private static void analyze_line(Map<String, String> line)
     {
         String msg = line.get("message");
         String inst = "";
@@ -144,7 +144,7 @@ public class Extract_Features {
         }
     }
 
-    public int find_max_fail()
+    public static int find_max_fail()
     {
         int max_fails = -1;
         for (String tenant: tenant_fail.keySet())
@@ -155,7 +155,7 @@ public class Extract_Features {
         return max_fails;
     }
 
-    public int find_min_success(){
+    public static int find_min_success(){
         boolean first = true;
         int min_success = 0;
         for (String tenant: tenant_success.keySet())
@@ -174,7 +174,7 @@ public class Extract_Features {
     }
 
 
-    public double calculateAverage(ArrayList<Double> diff_list) {
+    public static double calculateAverage(ArrayList<Double> diff_list) {
         double sum = 0;
         if(!diff_list.isEmpty()) {
             for (Double d: diff_list) {
@@ -184,7 +184,7 @@ public class Extract_Features {
         }
         return sum;
     }
-    public double find_min_diffrences(){
+    public static double find_min_diffrences(){
         boolean first = true;
         double min_diff = 0;
         double avg_diff = 0;
@@ -204,12 +204,13 @@ public class Extract_Features {
 
     }
 
-    public Feature_Vector build_feature_vector()
+    public static Feature_Vector build_feature_vector()
     {
+        build_sample("C:\\Users\\uzer1\\Desktop\\d3.txt");
         return new Feature_Vector(find_max_fail(), find_min_success(), find_min_diffrences());
     }
 
-    public void build_sample(String input_path) {
+    public static void build_sample(String input_path) {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(input_path));
@@ -226,9 +227,19 @@ public class Extract_Features {
                     }
                 }
             reader.close();
-            
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        tenant_time_differences = new HashMap<>();
+        tenant_success = new HashMap<>();
+        tenant_fail = new HashMap<>();
+        tenant_last_time_fail = new HashMap<>();
+        Feature_Vector a = build_feature_vector();
+        System.out.println(a.getMax_num_fails());
+        System.out.println(a.getMin_num_success());
+        System.out.println(a.getMin_avg_differences());
     }
 }
