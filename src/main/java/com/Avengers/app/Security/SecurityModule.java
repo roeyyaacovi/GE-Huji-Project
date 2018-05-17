@@ -25,8 +25,8 @@ public class SecurityModule extends Interface_Module{
      */
     public SecurityModule(String moduleName, Framework_Module frameworkModule)
     {
-        this.moduleName = moduleName;
         this.sync_to = frameworkModule;
+        this.moduleName = moduleName;
     }
 
     /**

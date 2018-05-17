@@ -1,1 +1,1 @@
-MachineLearning.MachineLearningModule
+SQLI.SQLDetector
