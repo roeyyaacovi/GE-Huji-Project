@@ -13,7 +13,6 @@ import com.Avengers.app.Framework.Module_Alert;
 public class SecurityModule extends Interface_Module{
     /* Full path to file that will hold a list of connections between domains */
     private static final String graphInputFile = "C:\\Users\\roeyy\\Desktop\\School\\graph.txt";
-    //private static final String graphInputFile = "graph.txt";
 
     /* A mapping between the domain's name, and the Node that represents it */
     private Map<String, Node> domainToNode = new HashMap<String, Node>();
