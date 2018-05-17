@@ -17,12 +17,9 @@ public class MaxRequests implements Feature {
                                     Map<String, Feature> featureNameToObject){
 
         Map<String, Double> all_app_ids = calculateRequestsPerAppName(logData);
-
         Map.Entry<String, Double> retEntry = getAppWithMaxRequests(all_app_ids);
-
         featureValue = retEntry.getValue();
         appName = retEntry.getKey();
-
         return true;
     }
 
