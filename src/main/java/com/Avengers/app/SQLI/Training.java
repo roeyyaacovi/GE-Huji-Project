@@ -1,9 +1,13 @@
 package com.Avengers.app.SQLI;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 class Training {
+
     /* ML variables */
     private static final int NUM_OF_BUCKETS = 15;
     private static final int BUCKET_SIZE = 3;
@@ -49,9 +53,9 @@ class Training {
        ArrayList<ArrayList<Double>> featureProbabilities = new ArrayList<>();
 
         /* Check how many times tokens appeared in all of the samples put together */
-        for(ArrayList<Integer> feature_vector : featureVectors) {
-            for (int i = 0; i < feature_vector.size(); i++) {
-                featureCount.get(i).set(getBucket(feature_vector.get(i)), feature_vector.get(i) + 1);
+        for(ArrayList<Integer> featureVector : featureVectors) {
+            for (int i = 0; i < featureVector.size(); i++) {
+                featureCount.get(i).set(getBucket(featureVector.get(i)), featureVector.get(i) + 1);
             }
         }
 

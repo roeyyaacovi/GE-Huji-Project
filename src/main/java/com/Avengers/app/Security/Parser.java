@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Parser {
+class Parser {
 
-    public ArrayList<String> parseLine(Map<String, String> logLine){
+    ArrayList<String> parseLine(Map<String, String> logLine){
         String originValue = logLine.get("origin");
         String domainName;
         String startTime;
