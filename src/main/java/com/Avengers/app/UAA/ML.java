@@ -11,8 +11,9 @@ import java.util.List;
 
 class Instance {
     /** DO NOT CHANGE this class */
-    static int FTSVALUERANGE = 4; // fts can only be 0,1,2,3
+    static int FTSVALUERANGE = 2; // fts can only be 0,1
     int label; // label=1 ==> +; label=0 ==> -; label=-1 ==> cannot decide
+    Extract_Features.Feature_Vector ft;
     int[] fts; // mapping a t c g TO 0,1,2,3. For example fts[3]=2 means 3rd
     // feature is 'c'
     int uniqueId;// every instance will have an uniqe Id;
@@ -26,22 +27,34 @@ class Instance {
         } else {
             label = 0;
         }
-        // set this.fts
-        char[] charfts = temp[0].toCharArray();
-        this.fts = new int[charfts.length];
-        for (int i = 0; i < charfts.length; i++) {
-            if (charfts[i] == 'a') {
-                fts[i] = 0;
-            } else if (charfts[i] == 't') {
-                fts[i] = 1;
-            } else if (charfts[i] == 'c') {
-                fts[i] = 2;
-            } else {
-                fts[i] = 3;
+
+        String[] line_to_features = temp[0].split(",");
+        ft = new Extract_Features.Feature_Vector(Integer.parseInt(line_to_features[0]), Integer.parseInt(line_to_features[1]),
+                Double.parseDouble(line_to_features[2]));
+        this.fts = new int[line_to_features.length];
+        int max_num_fails_threshold = 20;
+        int min_num_success_threshold = 30;
+        int min_avg_differences_threshold = 40;
+//        for (int i = 0; i < line_to_features.length; i++) {
+            if (Integer.parseInt(line_to_features[0]) < max_num_fails_threshold) {
+                fts[0] = 0;
+            } else{
+                fts[0] = 1;
             }
-        }
+            if (Integer.parseInt(line_to_features[1]) < min_num_success_threshold) {
+                fts[1] = 0;
+            } else{
+                fts[1] = 1;
+            }
+            if (Integer.parseInt(line_to_features[2]) < min_avg_differences_threshold) {
+                fts[2] = 0;
+            } else{
+                fts[2] = 1;
+            }
+//        }
     }
 }
+
 
 class Node {
 
@@ -432,6 +445,8 @@ class ID3 {
     public static void main(String[] args) {
         ArrayList<Instance> trainInstances = new ArrayList<Instance>();
         ArrayList<Instance> testInstances = new ArrayList<Instance>();
+        String[] a = {};
+        Extract_Features.main(a);
         load("training.txt", "test.txt", trainInstances,
                 testInstances);
         {
