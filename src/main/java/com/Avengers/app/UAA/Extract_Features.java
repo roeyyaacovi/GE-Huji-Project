@@ -146,7 +146,7 @@ public class Extract_Features {
 
     public static int find_max_fail()
     {
-        int max_fails = -1;
+        int max_fails = 0;
         for (String tenant: tenant_fail.keySet())
         {
             if (tenant_fail.get(tenant) > max_fails)
@@ -204,9 +204,9 @@ public class Extract_Features {
 
     }
 
-    public static Feature_Vector build_feature_vector()
+    public static Feature_Vector build_feature_vector(String path)
     {
-        build_sample("C:\\Users\\uzer1\\Desktop\\d3.txt");
+        build_sample(path);
         return new Feature_Vector(find_max_fail(), find_min_success(), find_min_diffrences());
     }
 
@@ -237,7 +237,7 @@ public class Extract_Features {
         tenant_success = new HashMap<>();
         tenant_fail = new HashMap<>();
         tenant_last_time_fail = new HashMap<>();
-        Feature_Vector a = build_feature_vector();
+        Feature_Vector a = build_feature_vector("d3.txt");
         System.out.println(a.getMax_num_fails());
         System.out.println(a.getMin_num_success());
         System.out.println(a.getMin_avg_differences());

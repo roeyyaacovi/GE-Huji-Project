@@ -14,7 +14,7 @@ class Instance {
     static int FTSVALUERANGE = 2; // fts can only be 0,1
     int label; // label=1 ==> +; label=0 ==> -; label=-1 ==> cannot decide
     Extract_Features.Feature_Vector ft;
-    int[] fts; // mapping a t c g TO 0,1,2,3. For example fts[3]=2 means 3rd
+    int[] fts; // mapping features TO 0,1. For example fts[1]=0 means 3rd
     // feature is 'c'
     int uniqueId;// every instance will have an uniqe Id;
 
@@ -34,24 +34,22 @@ class Instance {
         this.fts = new int[line_to_features.length];
         int max_num_fails_threshold = 20;
         int min_num_success_threshold = 30;
-        int min_avg_differences_threshold = 40;
-//        for (int i = 0; i < line_to_features.length; i++) {
-            if (Integer.parseInt(line_to_features[0]) < max_num_fails_threshold) {
-                fts[0] = 0;
-            } else{
-                fts[0] = 1;
-            }
-            if (Integer.parseInt(line_to_features[1]) < min_num_success_threshold) {
-                fts[1] = 0;
-            } else{
-                fts[1] = 1;
-            }
-            if (Integer.parseInt(line_to_features[2]) < min_avg_differences_threshold) {
-                fts[2] = 0;
-            } else{
-                fts[2] = 1;
-            }
-//        }
+        int min_avg_differences_threshold = 12;
+        if (Integer.parseInt(line_to_features[0]) < max_num_fails_threshold) {
+            fts[0] = 0;
+        } else{
+            fts[0] = 1;
+        }
+        if (Integer.parseInt(line_to_features[1]) < min_num_success_threshold) {
+            fts[1] = 0;
+        } else{
+            fts[1] = 1;
+        }
+        if (Double.parseDouble(line_to_features[2]) < min_avg_differences_threshold) {
+            fts[2] = 0;
+        } else{
+            fts[2] = 1;
+        }
     }
 }
 
@@ -445,9 +443,7 @@ class ID3 {
     public static void main(String[] args) {
         ArrayList<Instance> trainInstances = new ArrayList<Instance>();
         ArrayList<Instance> testInstances = new ArrayList<Instance>();
-        String[] a = {};
-        Extract_Features.main(a);
-        load("training.txt", "test.txt", trainInstances,
+        load("trainingChange3.txt", "testChange3.txt", trainInstances,
                 testInstances);
         {
             ID3 id3 = new ID3();
@@ -462,5 +458,4 @@ class ID3 {
                     + id3.computeAccuracy(predictions, testInstances));
         }
     }
-
 }
