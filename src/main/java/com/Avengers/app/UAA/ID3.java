@@ -30,7 +30,7 @@ class Instance {
 
         String[] line_to_features = temp[0].split(",");
         ft = new Extract_Features.Feature_Vector(Integer.parseInt(line_to_features[0]), Integer.parseInt(line_to_features[1]),
-                Double.parseDouble(line_to_features[2]));
+                Double.parseDouble(line_to_features[2]), "+");
         this.fts = new int[line_to_features.length];
         int max_num_fails_threshold = 20;
         int min_num_success_threshold = 30;
