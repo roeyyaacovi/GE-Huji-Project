@@ -4,11 +4,9 @@ import com.Avengers.app.Framework.Parser;
 import javafx.util.Pair;
 
 import java.io.*;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,72 +15,9 @@ public class Extract_Features {
     private static Map<String, Integer> tenant_fail;
     private static Map<String, Integer> tenant_success;
     private static Map<String, ArrayList<Double>> tenant_time_differences;
-    private static Map<String, my_time> tenant_last_time_fail;
+    private static Map<String, My_Time> tenant_last_time_fail;
     private static final double TO_SECONDS = 60;
 
-
-
-
-
-    public static class my_time {
-        private int hour;
-        private int minute;
-        private double second;
-
-        public my_time(int h, int mi, double s) {
-            hour = h;
-            minute = mi;
-            second = s;
-        }
-
-        public int getHour() {
-            return hour;
-        }
-        public int getMinute(){
-            return minute;
-        }
-
-        public double getSecond() {
-            return second;
-        }
-    }
-
-    public static class Feature_Vector
-    {
-        private int max_num_fails;
-        private int min_num_success;
-        private double min_avg_differences;
-        private String label;
-
-        public Feature_Vector(int max_num_fails, int min_num_success, double min_avg_differences, String label )
-        {
-            this.max_num_fails = max_num_fails;
-            this.min_num_success = min_num_success;
-            this.min_avg_differences = min_avg_differences;
-            this.label = label;
-        }
-
-        public int getMax_num_fails()
-        {
-            return max_num_fails;
-        }
-
-        public int getMin_num_success()
-        {
-            return min_num_success;
-        }
-
-        public double getMin_avg_differences()
-        {
-            return min_avg_differences;
-        }
-
-        public String getLabel(){return label;}
-
-        public String toString(){
-            return Integer.toString(max_num_fails) + "," + Integer.toString(min_num_success) + ","  + Double.toString(min_avg_differences) +" "+ label;
-        }
-    }
 
         private static boolean check_if_fail(Map<String, String> line){
         String[] phrases = {"app_id","88a65cea-5d1a-4c9d-86e0-c3842093c4af","message",
@@ -116,7 +51,7 @@ public class Extract_Features {
         String inst = "";
         int h, mi;
         double s, diff;
-        my_time last;
+        My_Time last;
         String pattern = ".*time[^\\d]+(\\d+)-(\\d+)-(\\d+)T(\\d+):(\\d+):(.*)\\+.*tnt[^\\da-zA-Z]+([\\da-zA-Z-]+).*corr.*";
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(msg);
@@ -132,14 +67,14 @@ public class Extract_Features {
                 }
                 tenant_fail.put(inst, tenant_fail.get(inst) + 1);
                 if (!tenant_last_time_fail.containsKey(inst)){
-                    tenant_last_time_fail.put(inst, new my_time(h, mi, s));
+                    tenant_last_time_fail.put(inst, new My_Time(h, mi, s));
                 }else{
                     if (!tenant_time_differences.containsKey(inst))
                         tenant_time_differences.put(inst, new ArrayList<>());
                     last = tenant_last_time_fail.get(inst);
                     diff = (s - last.getSecond()) + ((mi - last.getMinute()) * TO_SECONDS) + ((h - last.getHour()) * TO_SECONDS *TO_SECONDS);
                     tenant_time_differences.get(inst).add(diff);
-                    tenant_last_time_fail.put(inst, new my_time(h, mi, s));
+                    tenant_last_time_fail.put(inst, new My_Time(h, mi, s));
                 }
             }
             if (check_if_success(line))
@@ -230,7 +165,7 @@ public class Extract_Features {
 
 
 
-    public static Feature_Vector build_sample(String input_path, String label) {
+    public static Features_Vector build_sample(String input_path, String label) {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(input_path));
@@ -247,16 +182,15 @@ public class Extract_Features {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Pair<String, Integer> max_fail = find_max_fail();
-        int success;
-        double time_differences;
-        if (tenant_success.keySet().contains(max_fail.getKey()))
-        {
-            success = tenant_success.get(max_fail.getKey());
-        }
-        else
-            success = 0;
-        return new Feature_Vector(max_fail.getValue(), success,find_min_diffrences(), label);
+        return get_features_vector(label);
+    }
+
+    public static void initialize_globals()
+    {
+        tenant_time_differences = new HashMap<>();
+        tenant_success = new HashMap<>();
+        tenant_fail = new HashMap<>();
+        tenant_last_time_fail = new HashMap<>();
     }
 
     public static void clear_globals()
@@ -272,7 +206,7 @@ public class Extract_Features {
         String label;
         File[] malicious_files = new File(malicious_directory).listFiles();
         File[] vanilla_files = new File(vanilla_directory).listFiles();
-        Feature_Vector feature_vector;
+        Features_Vector feature_vector;
         Writer writer = null;
         try {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(output_file), "utf-8"));
@@ -295,16 +229,33 @@ public class Extract_Features {
                 writer.close();
             } catch (Exception ex) {}
         }
-        System.out.println("ok");
     }
 
 
-    public static void main(String[] args) {
-        tenant_time_differences = new HashMap<>();
-        tenant_success = new HashMap<>();
-        tenant_fail = new HashMap<>();
-        tenant_last_time_fail = new HashMap<>();
-        build_samples("samples.txt", "malicious", "vanilla");
+
+    public static void build_all(String output_file, String malicious_directory, String vanilla_directory) {
+        initialize_globals();
+        build_samples(output_file, malicious_directory, vanilla_directory);
 
     }
+
+    public static void build_line_by_line (Map<String, String> line)
+    {
+        analyze_line(line);
+    }
+
+    public static Features_Vector get_features_vector(String label)
+    {
+        Pair<String, Integer> max_fail = find_max_fail();
+        int success;
+        if (tenant_success.keySet().contains(max_fail.getKey()))
+        {
+            success = tenant_success.get(max_fail.getKey());
+        }
+        else
+            success = 0;
+        return new Features_Vector(max_fail.getValue(), success,find_min_diffrences(), label);
+    }
+
+
 }

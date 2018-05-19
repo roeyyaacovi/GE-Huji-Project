@@ -13,7 +13,7 @@ class Instance {
     /** DO NOT CHANGE this class */
     static int FTSVALUERANGE = 2; // fts can only be 0,1
     int label; // label=1 ==> +; label=0 ==> -; label=-1 ==> cannot decide
-    Extract_Features.Feature_Vector ft;
+    Features_Vector ft;
     int[] fts; // mapping features TO 0,1. For example fts[1]=0 means 3rd
     // feature is 'c'
     int uniqueId;// every instance will have an uniqe Id;
@@ -29,7 +29,7 @@ class Instance {
         }
 
         String[] line_to_features = temp[0].split(",");
-        ft = new Extract_Features.Feature_Vector(Integer.parseInt(line_to_features[0]), Integer.parseInt(line_to_features[1]),
+        ft = new Features_Vector(Integer.parseInt(line_to_features[0]), Integer.parseInt(line_to_features[1]),
                 Double.parseDouble(line_to_features[2]), "+");
         this.fts = new int[line_to_features.length];
         int max_num_fails_threshold = 20;
@@ -154,7 +154,7 @@ class Node {
 }
 
 class ID3 {
-    Node root;
+    public static Node root;
 
     /**
      * @author Congle Zhang

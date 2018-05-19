@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class UAAModule extends Interface_Module {
+public class UAAModule_old extends Interface_Module {
     private Map<String, ArrayList<my_date>> tenant_map;
     private static final int LOGS_PER_MINUTE = 5;
     private static final int NUM_OF_MINUTES_TO_CHECK = 0;
@@ -20,7 +20,7 @@ public class UAAModule extends Interface_Module {
 
 
 
-    public UAAModule(String module_name, Framework_Module fm)
+    public UAAModule_old(String module_name, Framework_Module fm)
     {
         moduleName = module_name;
         sync_to = fm;
