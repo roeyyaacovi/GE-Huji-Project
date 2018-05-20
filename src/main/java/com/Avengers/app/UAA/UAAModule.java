@@ -5,6 +5,7 @@ import com.Avengers.app.Framework.Interface_Module;
 import com.Avengers.app.Framework.Module_Alert;
 import javafx.util.Pair;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -38,6 +39,7 @@ public class UAAModule extends Interface_Module {
             h = Integer.parseInt(m.group(4));
             mi = Integer.parseInt(m.group(5));
             s = Double.parseDouble(m.group(6));
+            My_Time my_time = new My_Time(h, mi, s);
             return new Pair<>(inst,  new My_Time(h, mi, s));
         }
         return null;
@@ -46,12 +48,12 @@ public class UAAModule extends Interface_Module {
     public Pair<My_Time, Map<String, String>> find_first_time()
     {
         ArrayList<Map<String, String>> lines = new ArrayList<>();
-        My_Time t;
+        Pair<String, My_Time> t;
         while(sync_to.getData(moduleName, lines, 1) >= 0)
         {
-            if ((t=extract_time(lines.get(0)).getValue()) != null)
+            if ((t=extract_time(lines.get(0))) != null)
             {
-                return new Pair<>(t, lines.get(0));
+                return new Pair<>(t.getValue(), lines.get(0));
             }
         }
         flag = false;
@@ -91,7 +93,10 @@ public class UAAModule extends Interface_Module {
                         prediction = ID3.root.classify(new Instance(features_vector.toString(), 0));
                         if (prediction == 1) {
                             Module_Alert ma = new Module_Alert(log_time.toString(), MESSAGE_TEMPLATE + tntNtime.getKey(), line);
-                            sync_to.alert(moduleName, ma);
+                            System.out.println(moduleName);
+                            System.out.println(ma);
+
+//                            sync_to.alert(moduleName, ma);
                         }
                         p = new Pair<>(log_time, line);
                         end_iteration = true;
@@ -107,4 +112,9 @@ public class UAAModule extends Interface_Module {
         }
 
     }
+
+
+
 }
+
+
