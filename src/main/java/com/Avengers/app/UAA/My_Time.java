@@ -25,6 +25,7 @@ public class My_Time {
 
     public Double time_difference(My_Time other)
     {
+        Double t = (other.getSecond() - second) + ((other.getMinute() - minute) * TO_SECONDS) + ((other.getHour() - hour) *TO_SECONDS*TO_SECONDS);
         return (other.getSecond() - second) + ((other.getMinute() - minute) * TO_SECONDS) + ((other.getHour() - hour) *TO_SECONDS*TO_SECONDS);
     }
 

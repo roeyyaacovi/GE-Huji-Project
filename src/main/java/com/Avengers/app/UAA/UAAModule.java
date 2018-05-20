@@ -67,7 +67,6 @@ public class UAAModule extends Interface_Module {
         ID3.main(null);
         ArrayList<Map<String, String>> lines = new ArrayList<>();
         Map<String, String> line;
-        int numLines = 0;
         My_Time first_log_time, log_time;
         Pair<String, My_Time> tntNtime;
         Pair<My_Time, Map<String, String>> p;
@@ -80,13 +79,16 @@ public class UAAModule extends Interface_Module {
             first_log_time = p.getKey();
             line = p.getValue();
             Extract_Features.build_line_by_line(line);
-            while(sync_to.getData(moduleName, lines, 1) > 0)
+            while(sync_to.getData(moduleName, lines, 10) > 0)
             {
                 line = lines.get(0);
-                if ((tntNtime = extract_time(line)) != null) {
+
+                if ((tntNtime = extract_time(lines.get(lines.size()-1))) != null) {
                     log_time = tntNtime.getValue();
                     if (first_log_time.time_difference(log_time) <= TO_SECONDS) {
-                        Extract_Features.build_line_by_line(line);
+                        for(Map<String, String> logLine : lines ){
+                            Extract_Features.build_line_by_line(logLine);
+                        }
                     } else {
                         features_vector = Extract_Features.get_features_vector("+");
                         Extract_Features.clear_globals();
