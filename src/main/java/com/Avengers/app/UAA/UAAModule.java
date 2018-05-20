@@ -12,10 +12,7 @@ import java.util.regex.Pattern;
 
 public class UAAModule extends Interface_Module {
 
-    private static Map<String, Integer> tenant_fail;
-    private static Map<String, Integer> tenant_success;
-    private static Map<String, ArrayList<Double>> tenant_time_differences;
-    private static Map<String, My_Time> tenant_last_time_fail;
+    
     private static final double TO_SECONDS = 60;
     private static final String MESSAGE_TEMPLATE = "UAA attack from ";
     private boolean flag = true;
@@ -63,7 +60,7 @@ public class UAAModule extends Interface_Module {
 
     @Override
     public void run() {
-        Extract_Features.build_samples("samples.txt", "malicious", "vanilla");
+        Extract_Features.build_all("samples.txt", "malicious", "vanilla");
         ID3.main(null);
         ArrayList<Map<String, String>> lines = new ArrayList<>();
         Map<String, String> line;
