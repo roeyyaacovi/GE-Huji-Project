@@ -16,6 +16,7 @@ public class UAAModule extends Interface_Module {
     private static final double TO_SECONDS = 60;
     private static final String MESSAGE_TEMPLATE = "UAA attack from ";
     private boolean flag = true;
+    private boolean end_iteration = false;
 
     public UAAModule(String moduleName, Framework_Module fm)
     {
@@ -93,13 +94,16 @@ public class UAAModule extends Interface_Module {
                             sync_to.alert(moduleName, ma);
                         }
                         p = new Pair<>(log_time, line);
+                        end_iteration = true;
                         break;
 
                     }
                 }
             }
-
-
+            if (end_iteration)
+                end_iteration = false;
+            else
+                flag = false;
         }
 
     }
