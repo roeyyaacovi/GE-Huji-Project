@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class UAAModule extends Interface_Module {
 
-    
+
     private static final double TO_SECONDS = 60;
     private static final String MESSAGE_TEMPLATE = "UAA attack from ";
     private boolean flag = true;
@@ -96,8 +96,6 @@ public class UAAModule extends Interface_Module {
                         break;
 
                     }
-                }else {
-                    p = find_first_time();
                 }
             }
 
