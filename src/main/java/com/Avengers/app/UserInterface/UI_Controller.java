@@ -23,9 +23,9 @@ public class UI_Controller {
 
     @MessageMapping("/status")
     @SendTo("/topic/status")
-    public Greeting greeting(String message) throws Exception {
+    public Greeting greeting(HelloMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
-       // return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
-        return new Greeting(message);
+        return new Greeting(HtmlUtils.htmlEscape(message.getName()) );
+        //return new Greeting(message);
     }
 }
