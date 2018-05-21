@@ -19,7 +19,7 @@ public class test_module1 extends Interface_Module {
     public void run() {
         ArrayList<Map<String, String>> line = new ArrayList<>();
         sync_to.getData(moduleName, line , 1 );
-        sync_to.alert(moduleName, new Module_Alert("14:30", "hello", line.get(0)));
+        sync_to.alert(new Module_Alert(moduleName,"14:30", "hello", line.get(0)));
 
     }
 }
