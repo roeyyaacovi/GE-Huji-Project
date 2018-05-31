@@ -1,7 +1,9 @@
 package com.Avengers.app.Framework;
 
-import java.util.Map;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
+import java.util.Map;
 public class Module_Alert {
     private String module_name;
     private String alert_time;

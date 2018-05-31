@@ -16,8 +16,6 @@ import java.util.Map;
 public class UI_Alert {
     private String content;
 
-    @Autowired
-    SimpMessagingTemplate template;
 
 
     public UI_Alert(Module_Alert module_alert)
@@ -25,8 +23,8 @@ public class UI_Alert {
         DateFormat dateFormat = new SimpleDateFormat();
         Calendar cal = Calendar.getInstance();
         String local_time = dateFormat.format(cal.getTime());
-        this.content = module_alert.getModule_name() + " " +  local_time + " " +  module_alert.getAlert_time() + " " +
-                module_alert.getMessage() + module_alert.getLog();
+        this.content = "module name: " + module_alert.getModule_name() + " " + "local time: " + local_time + " " + "event time: " + module_alert.getAlert_time() + " " +
+                "message: " + module_alert.getMessage() + " " + "log: " + module_alert.getLog();
 
 
 
@@ -36,7 +34,5 @@ public class UI_Alert {
         return content;
     }
 
-    public void sendMessage() {
-        template.convertAndSend("/topic/status", new Greeting(content));
-    }
+
 }

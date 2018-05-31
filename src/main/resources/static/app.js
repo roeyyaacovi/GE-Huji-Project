@@ -34,6 +34,7 @@ function disconnect() {
 
 function sendName() {
     stompClient.send("/app/status", {}, JSON.stringify({'name': $("#name").val()}));
+
 }
 
 function showGreeting(message) {

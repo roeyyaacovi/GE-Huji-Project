@@ -7,6 +7,7 @@ import com.Avengers.app.Framework.Module_Alert;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class test_module2 extends Interface_Module {
 
@@ -19,6 +20,11 @@ public class test_module2 extends Interface_Module {
     public void run() {
         ArrayList<Map<String, String>> line = new ArrayList<>();
         sync_to.getData(moduleName, line , 1 );
+        try {
+            TimeUnit.MINUTES.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         sync_to.alert(new Module_Alert(moduleName,"14:30", "apple", line.get(0)));
 
     }
