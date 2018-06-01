@@ -24,7 +24,7 @@ public class UI_Alert {
         Calendar cal = Calendar.getInstance();
         String local_time = dateFormat.format(cal.getTime());
         this.content = "module name: " + module_alert.getModule_name() + " " + "local time: " + local_time + " " + "event time: " + module_alert.getAlert_time() + " " +
-                "message: " + module_alert.getMessage() + " " + "log: " + module_alert.getLog();
+                "message: " + module_alert.getMessage(); // + " " + "log: " + module_alert.getLog();
 
 
 

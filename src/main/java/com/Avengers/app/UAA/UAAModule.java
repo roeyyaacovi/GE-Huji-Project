@@ -94,11 +94,8 @@ public class UAAModule extends Interface_Module {
                         Extract_Features.clear_globals();
                         prediction = ID3.root.classify(new Instance(features_vector.toString(), 0));
                         if (prediction == 1) {
-                            Module_Alert ma = new Module_Alert(log_time.toString(), MESSAGE_TEMPLATE + tntNtime.getKey(), line);
-                            System.out.println(moduleName);
-                            System.out.println(ma);
-
-//                            sync_to.alert(moduleName, ma);
+                            Module_Alert ma = new Module_Alert(moduleName, log_time.toString(), MESSAGE_TEMPLATE + tntNtime.getKey(), line);
+                            sync_to.alert(ma);
                         }
                         p = new Pair<>(log_time, line);
                         end_iteration = true;
