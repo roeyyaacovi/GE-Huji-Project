@@ -76,11 +76,11 @@ public class Start_Tool {
                     modules_names.add(module_name);
                 }
                 Framework_Module fm = new Framework_Module(modules_names, log_file);
-                make_html_file(modules_names.size());
-                Interface_Module UIm = new UI_Module("UI_Module", fm, modules_names);
-                UIm.start();
-                modules_threads.add(UIm);
-                SpringApplication.run(Start_Tool.class, args);
+//                make_html_file(modules_names.size());
+//                Interface_Module UIm = new UI_Module("UI_Module", fm, modules_names);
+//                UIm.start();
+//                modules_threads.add(UIm);
+//                SpringApplication.run(Start_Tool.class, args);
                 for (String mname: modules_names) {
                     c = Class.forName(PACKAGE_NAME + mname);
                     m = c.getConstructor(String.class, Framework_Module.class);
@@ -92,7 +92,7 @@ public class Start_Tool {
                 for (Interface_Module module : modules_threads) {
                     module.join();
                 }
-                UIm.join();
+//                UIm.join();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

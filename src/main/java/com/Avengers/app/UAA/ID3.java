@@ -443,7 +443,7 @@ class ID3 {
     public static void main(String[] args) {
         ArrayList<Instance> trainInstances = new ArrayList<Instance>();
         ArrayList<Instance> testInstances = new ArrayList<Instance>();
-        load("trainingChange3.txt", "testChange3.txt", trainInstances,
+        load("training.txt", "test.txt", trainInstances,
                 testInstances);
         {
             ID3 id3 = new ID3();
