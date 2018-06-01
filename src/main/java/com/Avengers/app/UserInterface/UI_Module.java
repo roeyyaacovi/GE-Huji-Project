@@ -27,12 +27,12 @@ public class UI_Module extends Interface_Module {
             synchronized (sync_to.modules_messages) {
                 try {
                     sync_to.modules_messages.wait();
+                    TimeUnit.SECONDS.sleep(1);
                     sync_to.getAlertData(modules_alerts);
                     for(Module_Alert module_alert: modules_alerts)
                     {
                         UI_Alert ui_alert = new UI_Alert(module_alert);
                         SchedulerConfig.setMsg(ui_alert.getContent());
-                        TimeUnit.MILLISECONDS.sleep(1000);
                     }
                     modules_alerts.clear();
                 } catch (InterruptedException e) {

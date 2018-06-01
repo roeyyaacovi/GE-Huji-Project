@@ -25,6 +25,10 @@ public class UI_Controller {
     @SendTo("/topic/status")
     public Greeting greeting(HelloMessage message) throws Exception {
         //Thread.sleep(1000); // simulated delay
+        if (message.getName().equals("connected"))
+        {
+            SchedulerConfig.setConnected();
+        }
         return new Greeting(HtmlUtils.htmlEscape(message.getName()) );
         //return new Greeting(message.getName());
     }
