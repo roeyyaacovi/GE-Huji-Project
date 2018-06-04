@@ -13,15 +13,30 @@ import java.util.ArrayList;
 @Configuration
 public class SchedulerConfig {
 
+    private static ArrayList<String> messages = new ArrayList<>();
+    private static boolean connected = false;
+
     @Autowired
     SimpMessagingTemplate template;
 
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 1000)
     public void sendMessages() {
-        ArrayList<UI_Alert> to_return = new ArrayList<>();
-        for (String m : UI_Module.modules_alerts.keySet()) {
-            to_return.add(new UI_Alert(m, UI_Module.modules_alerts.get(m)));
+            if (messages.size() >0 && connected) {
+                for (String msg: messages)
+                    template.convertAndSend("/topic/status", new Greeting(msg));
+                messages.clear();
         }
-        template.convertAndSend("/topic/status", to_return.get(0));
     }
+
+    public static void setMsg(String msg1){
+
+        messages.add(msg1);
+
+    }
+
+    public static void setConnected(){
+        connected = true;
+    }
+
+
 }

@@ -19,6 +19,8 @@ public class TimeByIpModule extends Interface_Module {
     /* Parser object that parses the log message */
     private Parser logParser = new Parser();
 
+    private static final String MESSAGE_TEMPLATE = "Suspicious access";
+
     public TimeByIpModule(String module_name, Framework_Module fm)
     {
         moduleName = module_name;
@@ -156,9 +158,11 @@ public class TimeByIpModule extends Interface_Module {
                     if (null == parsedLogData) {
                         continue;
                     }
-                    Module_Alert module_alert = new Module_Alert(parsedLogData.get(1),
-                            "TimeByIp Module", logLine);
-                    sync_to.alert("SuspiciousTimeByIp.SuspiciousTimeByIp", module_alert);
+
+                    Module_Alert module_alert = new Module_Alert(moduleName, "12:30",MESSAGE_TEMPLATE, logLine);
+
+                    sync_to.alert(module_alert);
+                    
                     return;
                 }
             }

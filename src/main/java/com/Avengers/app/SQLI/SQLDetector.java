@@ -23,7 +23,7 @@ public class SQLDetector extends Interface_Module {
     /* Parser object that parses the log message */
     private Parser logParser = new Parser();
 
-    private boolean testOutput = true;
+    private static final String MESSAGE_TEMPLATE = "SQL injection detected";
 
     private enum ML_DECISION{
         BENIGN,
@@ -221,11 +221,9 @@ public class SQLDetector extends Interface_Module {
 
                 if(ML_DECISION.BENIGN == makeDecision(savedMaliciousProbabilityVector, savedVanillaProbabilityVector,
                         featureVector)){
-                    
-                    /* Raise flag to framework */
-                    Module_Alert module_alert = new Module_Alert(parsedLogData.get(1),"SQLI Module", logLine);
-                    sync_to.alert("SQLI.SQLDetector", module_alert);
+                    Module_Alert module_alert = new Module_Alert(moduleName, "12:30",MESSAGE_TEMPLATE, logLine);
 
+                    sync_to.alert(module_alert);
                 }
             }
         }

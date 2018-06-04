@@ -20,6 +20,8 @@ public class SecurityModule extends Interface_Module{
     /* Parser object that parses the log message */
     private Parser logParser = new Parser();
 
+    private static final String MESSAGE_TEMPLATE = "Detected invalid access to server";
+
     /**
      * Constructor
      */
@@ -96,10 +98,9 @@ public class SecurityModule extends Interface_Module{
 
                 if(!checkLine(parsedLogData)){
                     /* Raise flag to framework */
-                    Module_Alert module_alert = new Module_Alert(parsedLogData.get(1),
-                            "Security Module", logLine);
+                    Module_Alert module_alert = new Module_Alert(moduleName, "12:30",MESSAGE_TEMPLATE, logLine);
 
-                    sync_to.alert("Security.SecurityModule", module_alert);
+                    sync_to.alert(module_alert);
                 }
 
             }

@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Framework_Module  {
     private Map<String, Long> module_file_pos;
-    public Map<String, ArrayList<Module_Alert>> modules_messages;
+    public ArrayList<Module_Alert> modules_messages;
     private boolean new_alert = true;
     private String input_path;
     private static final long INITIAL_VALUE = 0;
@@ -18,7 +18,7 @@ public class Framework_Module  {
     public Framework_Module(ArrayList<String> modules_names, String input_path)
     {
         module_file_pos = new HashMap<>();
-        modules_messages = new HashMap<>();
+        modules_messages = new ArrayList<>();
         for (String module_name: modules_names)
         {
             module_file_pos.put(module_name, INITIAL_VALUE);
@@ -64,25 +64,21 @@ public class Framework_Module  {
         return lines_to_return;
     }
 
-    public synchronized void getAlertData(Map<String, Deque<Module_Alert>> UI_msg)
+    public synchronized void getAlertData(Deque<Module_Alert> UI_msg)
     {
-        for (String key: modules_messages.keySet())
-        {
-            for (Module_Alert msg: modules_messages.get(key))
-                UI_msg.get(key).addFirst(msg);
-        }
-        for (String key: modules_messages.keySet()) {
-            modules_messages.get(key).clear();
+        synchronized (modules_messages) {
+            for (Module_Alert module_alert : modules_messages) {
+                UI_msg.addFirst(module_alert);
+            }
+            modules_messages.clear();
         }
 
     }
-    public synchronized void alert(String module_name, Module_Alert module_alert)
+    public synchronized void alert(Module_Alert module_alert)
     {
 
         synchronized (modules_messages) {
-            if (!modules_messages.containsKey(module_name))
-                modules_messages.put(module_name, new ArrayList<>());
-            modules_messages.get(module_name).add(module_alert);
+            modules_messages.add(module_alert);
             modules_messages.notifyAll();
         }
 
