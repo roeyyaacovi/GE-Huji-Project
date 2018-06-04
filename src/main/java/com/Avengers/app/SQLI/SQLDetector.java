@@ -23,6 +23,8 @@ public class SQLDetector extends Interface_Module {
     /* Parser object that parses the log message */
     private Parser logParser = new Parser();
 
+    private boolean testOutput = true;
+
     private enum ML_DECISION{
         BENIGN,
         MALICIOUS
@@ -66,14 +68,20 @@ public class SQLDetector extends Interface_Module {
 
     }
 
-    private Double test(List<ArrayList<Integer>> testingMalicious, List<ArrayList<Integer>> testingVanilla){
+    private ArrayList<Double> test(List<ArrayList<Integer>> testingMalicious, List<ArrayList<Integer>> testingVanilla){
+        ArrayList<Double> testData = new ArrayList<>();
+        int totalFalsePositives = 0;
         int totalCorrect = 0;
+        int totalFalseNegatives = 0;
+
         int totalNumberOfSamples = testingMalicious.size() + testingVanilla.size();
 
         for(ArrayList<Integer> vanillaSample : testingVanilla){
             if(ML_DECISION.BENIGN == makeDecision(training.getMaliciousProbabilityVector(),
                     training.getVanillaProbabilityVector(), vanillaSample)){
                 totalCorrect += 1;
+            }else {
+                totalFalsePositives += 1;
             }
         }
 
@@ -81,10 +89,16 @@ public class SQLDetector extends Interface_Module {
             if(ML_DECISION.MALICIOUS == makeDecision(training.getMaliciousProbabilityVector(),
                     training.getVanillaProbabilityVector(), maliciousSample)){
                 totalCorrect += 1;
+            }else {
+                totalFalseNegatives += 1;
             }
         }
 
-        return (double)totalCorrect/totalNumberOfSamples;
+        testData.add((double)totalCorrect/totalNumberOfSamples);
+        testData.add((double)totalFalsePositives/totalNumberOfSamples);
+        testData.add((double)totalFalseNegatives/totalNumberOfSamples);
+
+        return testData;
     }
 
     private void writeArrayToFile(String fileName, ArrayList<ArrayList<Double>> arrayListToWrite){
@@ -162,8 +176,13 @@ public class SQLDetector extends Interface_Module {
         training.train(featureBuilder.getTrainingMalicious(), featureBuilder.getTrainingVanilla());
         System.out.println("Finished training");
 
-        double totalCorrect = test(featureBuilder.getTestingMalicious(), featureBuilder.getTestingVanilla());
-        System.out.println("Finished testing, success rate is: " + totalCorrect);
+        if(testOutput){
+            ArrayList<Double> testData = test(featureBuilder.getTestingMalicious(), featureBuilder.getTestingVanilla());
+            System.out.println("Finished testing, success rate is: " + testData.get(0) + "\n" +
+                               "False positive rate is: " + testData.get(1) + "\n" +
+                               "False negative rate is: " + testData.get(2) + "\n");
+
+        }
 
         saveTrainingToFile();
         savedVanillaProbabilityVector = training.getVanillaProbabilityVector();

@@ -9,8 +9,8 @@ import java.util.Random;
 
 class FeatureBuilder {
     /* Files containing SQL statements */
-    private static final String maliciousSqlFile = "C:\\Users\\roeyy\\PycharmProjects\\sql\\malicious_sql.txt";
-    private static final String vanillaSqlFile = "C:\\Users\\roeyy\\PycharmProjects\\sql\\vanilla_sql.txt";
+    private static final String maliciousSqlFile = "malicious_sql.txt";
+    private static final String vanillaSqlFile = "vanilla_sql.txt";
 
     /* Tokens */
     private static final String[] SINGLE_LINE_COMMENT = {"--"};
@@ -27,7 +27,7 @@ class FeatureBuilder {
     private List<ArrayList<Integer>> testingMalicious;
     private List<ArrayList<Integer>> testingVanilla;
 
-    private final double TRAINING_RATIO = 0.8;
+    private static final double TRAINING_RATIO = 0.8;
 
     private String generateRandomString() {
         String stringChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -87,10 +87,13 @@ class FeatureBuilder {
                 featureVectors.add(createFeatureVector(sqlString));
             }
 
+            bufferedReader.close();
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
+
 
         return featureVectors;
     }

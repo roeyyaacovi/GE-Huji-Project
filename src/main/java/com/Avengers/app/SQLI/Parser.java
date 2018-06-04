@@ -40,8 +40,6 @@ public class Parser {
 
     private String getSQLPattern(String logMessage){
         Pattern pattern = Pattern.compile("executing prepstmnt [0-9]* ([\\s-a-zA-Z_0-9.,]*)\"");
-        //Pattern pattern = Pattern.compile("executing prepstmnt [0-9]* ([\\s-a-zA-Z_0-9.]*)\" .*");
-        //Pattern pattern = Pattern.compile("executing prepstmnt");
 
         Matcher matcher = pattern.matcher(logMessage);
 
