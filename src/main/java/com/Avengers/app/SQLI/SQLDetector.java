@@ -23,7 +23,9 @@ public class SQLDetector extends Interface_Module {
     /* Parser object that parses the log message */
     private Parser logParser = new Parser();
 
-    private static final String MESSAGE_TEMPLATE = "SQL injection detected";
+    private boolean testOutput = true;
+
+    private static final String MESSAGE_TEMPLATE = "The following SQL statement may be an SQL injection:\n";
 
     private enum ML_DECISION{
         BENIGN,
@@ -219,13 +221,17 @@ public class SQLDetector extends Interface_Module {
 
                 ArrayList<Integer> featureVector = featureBuilder.createFeatureVector(parsedLogData.get(0));
 
-                if(ML_DECISION.BENIGN == makeDecision(savedMaliciousProbabilityVector, savedVanillaProbabilityVector,
+                if(ML_DECISION.BENIGN != makeDecision(savedMaliciousProbabilityVector, savedVanillaProbabilityVector,
                         featureVector)){
-                    Module_Alert module_alert = new Module_Alert(moduleName, "12:30",MESSAGE_TEMPLATE, logLine);
+                    String alertMessage = MESSAGE_TEMPLATE + parsedLogData.get(0);
+                    Module_Alert module_alert = new Module_Alert("SQLI", parsedLogData.get(1), alertMessage, logLine);
 
                     sync_to.alert(module_alert);
                 }
             }
+
+            logData.clear();
+
         }
     }
 }
