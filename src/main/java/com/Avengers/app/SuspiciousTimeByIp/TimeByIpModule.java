@@ -131,38 +131,34 @@ public class TimeByIpModule extends Interface_Module {
                 }
             }
             for (Map<String, String> logLine : logData) {
-                System.out.println(logLine.get("timestamp"));
-//                String ip = logLine.get("ip");
-                String ip = "52.11.117.32";
+                String ip = logLine.get("ip").replaceAll("\"", "");
+//                String ip = "52.11.117.32";
+//                String ip2 = "218.107.132.66";
                 List<String> country_city = getCountryCityByIp(ip);
 
-                if (country_city != null) {
-                    for (String aCountry_city : country_city) System.out.println(aCountry_city);
-                }
+                List<String> city_offset = getOffsetByCity("China", "Shenzhen");
 //                List<String> city_offset = getOffsetByCity("china", "shanghai");
-                List<String> city_offset = getOffsetByCity("china", "shanghai");
                 int city_offset_int = 0;
                 if (city_offset != null) {
                     String offset_to_parse = city_offset.get(0).substring(1, city_offset.get(0).length() - 1);
                     city_offset_int = Integer.parseInt(offset_to_parse);
                 }
-                String timestamp = "513091064211";
+                String timestamp = logLine.get("timestamp");
+//                String timestamp = "513091064211";
                 timestamp = timestamp.substring(1, 11);
                 Date d = convertTimestampToDate(Long.valueOf(timestamp));
                 Date local_time_at_ip_origin = new Date(d.getTime() + 3600000 * city_offset_int);
-                System.out.println("     " + local_time_at_ip_origin);
 
-                if (isTimeSuspicious(local_time_at_ip_origin)) {
-                    ArrayList<String> parsedLogData = logParser.parseLine(logLine);
-
-                    if (null == parsedLogData) {
-                        continue;
+                ArrayList<String> parsedLogData = logParser.parseLine(logLine);
+                if (null != parsedLogData && isTimeSuspicious(local_time_at_ip_origin)) {
+                    if (country_city != null) {
+                        for (String aCountry_city : country_city) System.out.println(aCountry_city);
                     }
+                    System.out.println("     " + local_time_at_ip_origin);
 
-                    Module_Alert module_alert = new Module_Alert(moduleName, "12:30",MESSAGE_TEMPLATE, logLine);
-
+                    Module_Alert module_alert = new Module_Alert(moduleName, "14:46",MESSAGE_TEMPLATE, logLine);
                     sync_to.alert(module_alert);
-                    
+
                     return;
                 }
             }

@@ -55,6 +55,7 @@ public class UAAModule extends Interface_Module {
             {
                 return new Pair<>(t.getValue(), lines.get(0));
             }
+            lines.clear();
         }
         flag = false;
         return null;
