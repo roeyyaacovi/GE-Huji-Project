@@ -1,1 +1,1 @@
-UAA.UAAModule
+SQLI.SQLDetector

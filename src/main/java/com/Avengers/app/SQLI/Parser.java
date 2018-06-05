@@ -9,6 +9,7 @@ public class Parser {
     ArrayList<String> parseLine(Map<String, String> logLine){
         String sourceTypeValue = logLine.get("source_type");
         String sqlLine = "";
+        String startTime = "";
 
         ArrayList<String> outArrayList = new ArrayList<>();
 
@@ -33,15 +34,32 @@ public class Parser {
             return null;
         }
 
+        startTime = getStartTime(logMessage);
+
+        if(startTime == null){
+            return null;
+        }
+
         outArrayList.add(sqlLine);
+        outArrayList.add(startTime);
 
         return outArrayList;
     }
 
+    private String getStartTime(String logMessage){
+        Pattern pattern = Pattern.compile("\"(.*?) ");
+
+        Matcher matcher = pattern.matcher(logMessage);
+
+        if(!matcher.find()){
+            return null;
+        }
+
+        return matcher.group(1);
+    }
+
     private String getSQLPattern(String logMessage){
-        Pattern pattern = Pattern.compile("executing prepstmnt [0-9]* ([\\s-a-zA-Z_0-9.,]*)\"");
-        //Pattern pattern = Pattern.compile("executing prepstmnt [0-9]* ([\\s-a-zA-Z_0-9.]*)\" .*");
-        //Pattern pattern = Pattern.compile("executing prepstmnt");
+        Pattern pattern = Pattern.compile("executing prepstmnt [0-9]* (.*) ");
 
         Matcher matcher = pattern.matcher(logMessage);
 
